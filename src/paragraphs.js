@@ -4,8 +4,8 @@ let paragraphs = [
             [
                 { paragraph: "In modern times the first scrawny kitten is, in its own way, an input. An ostrich is the beginner of a roast. An appressed exhaust is a gun of the mind. A recorder is a grade from the right perspective. A hygienic is the cowbell of a skin. Few can name a dun brazil that isn't a highbrow playroom. The unwished beast comes from a thorny oxygen. An insured advantage's respect comes with it the thought that the lucid specialist is a fix." },
             ]
-    }
-    , {
+    },
+    {
         Calculus:
             [
                 {

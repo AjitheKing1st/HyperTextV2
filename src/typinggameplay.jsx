@@ -492,9 +492,16 @@ function TypingGameplay() {
 
         const hideParagraphs = () => paragraphs.forEach(p => p.style.display = 'none');
 
+        const checkFirstParagraph = () => {
+            if (paragraphs[initalDisplayCount].style.display == "block") {
+                prevBtn.style.display = "none";
+            }
+        }
+
         nextBtn.addEventListener('click', () => {
 
             if (currentIndexOfParagraph < maxIndexOfParagraph) {
+
                 currentIndexOfParagraph += 1;
 
                 if (currentIndexOfParagraph == maxIndexOfParagraph) {
@@ -505,30 +512,32 @@ function TypingGameplay() {
                 return;
             }
 
+            checkFirstParagraph()
             hideParagraphs();
             paragraphs[currentIndexOfParagraph].style.display = "block";
+            prevBtn.style.display = "block";
             typingSection.scrollTop = 0;
         });
 
         prevBtn.addEventListener('click', () => {
-            if (currentIndexOfParagraph >= initalDisplayCount && currentIndexOfParagraph <= maxIndexOfParagraph) {
+            if (currentIndexOfParagraph > initalDisplayCount && currentIndexOfParagraph <= maxIndexOfParagraph) {
+
+                currentIndexOfParagraph -= 1;
 
                 if (currentIndexOfParagraph == initalDisplayCount) {
                     currentIndexOfParagraph = initalDisplayCount;
-                    nextBtn.style.display = "block";
+                    prevBtn.style.display = "none"
                 }
-                else {
-                    currentIndexOfParagraph -= 1;
-                }
+
             }
             else {
-                currentIndexOfParagraph = initalDisplayCount;
-                prevBtn.style.display = "none";
                 return;
             }
 
+            checkFirstParagraph()
             hideParagraphs();
             paragraphs[currentIndexOfParagraph].style.display = "block";
+            nextBtn.style.display = "block"
             typingSection.scrollTop = 0;
         });
 
@@ -536,45 +545,8 @@ function TypingGameplay() {
             const key = event.key.toLowerCase();
 
             if (key == "enter") {
-                if (currentIndexOfParagraph < paragraphsLimit - 1) {
-                    currentIndexOfParagraph += 1;
-
-                    if (currentIndexOfParagraph == paragraphsLimit - 1) {
-                        nextBtn.style.display = "none";
-                    }
-                }
-                else {
-                    return;
-                }
-
-                hideParagraphs();
-                paragraphs[currentIndexOfParagraph].style.display = "block";
-                typingSection.scrollTop = 0;
-                prevBtn.style.display = "block";
-            }
-            else if (key == "arrowleft") {
-                if (currentIndexOfParagraph >= initalDisplayCount && currentIndexOfParagraph <= maxIndexOfParagraph) {
-
-                    if (currentIndexOfParagraph == initalDisplayCount) {
-                        currentIndexOfParagraph = initalDisplayCount;
-                        nextBtn.style.display = "block"
-                    }
-                    else {
-                        currentIndexOfParagraph -= 1;
-                    }
-                }
-                else {
-                    currentIndexOfParagraph = initalDisplayCount;
-                    prevBtn.style.display = "none";
-                    return;
-                }
-
-                hideParagraphs();
-                paragraphs[currentIndexOfParagraph].style.display = "block";
-                typingSection.scrollTop = 0;
-            }
-            else if (key == "arrowright") {
                 if (currentIndexOfParagraph < maxIndexOfParagraph) {
+
                     currentIndexOfParagraph += 1;
 
                     if (currentIndexOfParagraph == maxIndexOfParagraph) {
@@ -585,14 +557,68 @@ function TypingGameplay() {
                     return;
                 }
 
+                checkFirstParagraph()
                 hideParagraphs();
                 paragraphs[currentIndexOfParagraph].style.display = "block";
+                prevBtn.style.display = "block";
+                typingSection.scrollTop = 0;
+            }
+            else if (key == "arrowleft") {
+                if (currentIndexOfParagraph > initalDisplayCount && currentIndexOfParagraph <= maxIndexOfParagraph) {
+
+                    currentIndexOfParagraph -= 1;
+
+                    if (currentIndexOfParagraph == initalDisplayCount) {
+                        currentIndexOfParagraph = initalDisplayCount;
+                        prevBtn.style.display = "none"
+                    }
+
+                }
+                else {
+                    return;
+                }
+
+                checkFirstParagraph()
+                hideParagraphs();
+                paragraphs[currentIndexOfParagraph].style.display = "block";
+                nextBtn.style.display = "block"
+                typingSection.scrollTop = 0;
+            }
+            else if (key == "arrowright") {
+                if (currentIndexOfParagraph < maxIndexOfParagraph) {
+
+                    currentIndexOfParagraph += 1;
+
+                    if (currentIndexOfParagraph == maxIndexOfParagraph) {
+                        nextBtn.style.display = "none";
+                    }
+                }
+                else {
+                    return;
+                }
+
+                checkFirstParagraph()
+                hideParagraphs();
+                paragraphs[currentIndexOfParagraph].style.display = "block";
+                prevBtn.style.display = "block";
                 typingSection.scrollTop = 0;
             }
         });
 
         prevBtn.style.display = "none";
         nextBtn.style.display = "block";
+
+        let filteredParagraph = paragraphs2.filter(item => item[triviatopic])
+
+        if (!(filteredParagraph.length > 1)) {
+            prevBtn.style.display = "none";
+            nextBtn.style.display = "none";
+        }
+        else {
+            prevBtn.style.display = "none";
+            nextBtn.style.display = "block";
+        }
+
     }, [])
 
 
