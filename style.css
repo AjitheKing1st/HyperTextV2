@@ -1,0 +1,596 @@
+* {
+    box-sizing: border-box;
+    scroll-behavior: smooth;
+    margin: 0;
+    padding: 0;
+}
+
+*,
+::before,
+::after {
+    box-sizing: inherit;
+}
+
+body {
+    font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+    display: flex;
+    flex-direction: column;
+    flex-wrap: wrap;
+    /*background: linear-gradient(to right,#2ac3de,#9ece6a);*/
+    background: #1a1b26;
+    overflow-x: hidden;
+    overflow-y: auto;
+    margin: 0;
+    padding: 0;
+}
+
+.options {
+    background: linear-gradient(90deg, rgba(255, 0, 0, 1) 0%, rgba(10, 0, 247, 1) 100%, rgba(0, 0, 0, 1) 100%);
+    display: flex;
+    flex-wrap: wrap;
+    flex-direction: row;
+    position: sticky;
+    color: white;
+    z-index: 1;
+    top: 0;
+    width: 100%;
+}
+
+.light-mode {
+    background-color: white;
+}
+
+.dark-mode {
+    background-color: #1a1b26;
+}
+
+.keyboard {
+    font-size: 40px;
+}
+
+.keyboard:hover {
+    color: aqua;
+}
+
+.title {
+    text-align: left;
+    margin-top: 10px;
+    margin-left: 5px;
+}
+
+.title h3 {
+    cursor: pointer;
+}
+
+.title h3:hover {
+    color: aqua;
+}
+
+.default-options {
+    margin: auto;
+}
+
+.three-options {
+    list-style-type: none;
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    gap: 10px;
+}
+
+.three-options li {
+    display: inline;
+    cursor: pointer;
+}
+
+.three-options li:hover {
+    color: aqua;
+}
+
+.three-options>li:first-child {
+    border-right: 2px yellow solid;
+    width: 75px;
+}
+
+.three-options>li:nth-child(2) {
+    border-right: 2px yellow solid;
+    width: 70px;
+}
+
+.toggleContainer {
+    position: relative;
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    width: fit-content;
+    border: 3px solid #343434;
+    border-radius: 20px;
+    background: #343434;
+    font-weight: bold;
+    color: #343434;
+    cursor: pointer;
+    margin-right: 15px;
+    transform: scale(0.8);
+}
+
+.toggleContainer div {
+    margin: auto;
+}
+
+.toggleContainer::before {
+    content: '';
+    position: absolute;
+    width: 50%;
+    height: 100%;
+    left: 0%;
+    border-radius: 20px;
+    background: white;
+    transition: all 0.3s;
+}
+
+.toggleCheckbox:checked+.toggleContainer::before {
+    left: 50%;
+}
+
+.toggleContainer div {
+    padding: 6px;
+    text-align: center;
+    z-index: 1;
+}
+
+.toggleCheckbox {
+    display: none;
+}
+
+.toggleCheckbox:checked+.toggleContainer div:first-child {
+    color: white;
+    transition: color 0.3s;
+}
+
+.toggleCheckbox:checked+.toggleContainer div:last-child {
+    color: #343434;
+    transition: color 0.3s;
+}
+
+.toggleCheckbox+.toggleContainer div:first-child {
+    color: #343434;
+    transition: color 0.3s;
+}
+
+.toggleCheckbox+.toggleContainer div:last-child {
+    color: white;
+    transition: color 0.3s;
+}
+
+.fa-gear {
+    font-size: 30px;
+    margin-top: auto;
+    margin-bottom: auto;
+    margin-right: 10px;
+    cursor: pointer;
+    color: black;
+}
+
+.fa-gear:hover {
+    animation: gearAnimate 2s linear infinite;
+    color: aqua;
+}
+
+@keyframes gearAnimate {
+    0% {
+        transform: rotate(360deg);
+    }
+}
+
+@keyframes gearAnimate {
+    100% {
+        transform: rotate(-360deg);
+    }
+}
+
+.recent {
+    border: 2px yellow solid;
+    background: rgb(46, 69, 63);
+    display: flex;
+    flex-wrap: wrap;
+    flex-direction: column;
+    padding: 15px;
+    position: static;
+    margin: auto;
+}
+
+.opening-title {
+    text-align: center;
+    color: rgb(34, 193, 195);
+}
+
+.recent p:nth-child(2) {
+    margin-top: 20px;
+}
+
+.recent p:nth-child(3) {
+    margin-top: 20px;
+}
+
+.option-buttons {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    gap: 10px;
+    justify-content: center;
+    align-items: center;
+    margin-top: 15px;
+}
+
+.skip-button {
+    font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+    width: 70px;
+    height: 25px;
+    color: ghostwhite;
+    background-color: rgb(131, 58, 180);
+    font-weight: bold;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    box-shadow: 4px;
+    box-shadow: 0 0 6px 3px rgba(0, 0, 0, 0.3);
+    background: radial-gradient(circle, rgba(63, 94, 251, 1) 0%, rgba(252, 70, 107, 1) 100%);
+}
+
+.skip-button:hover {
+    width: 80px;
+    height: 30px;
+}
+
+.start-button {
+    font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+    width: 120px;
+    height: 40px;
+    font-weight: bold;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    box-shadow: 0 0 6px 3px rgba(0, 0, 0, 0.3);
+    background: linear-gradient(90deg, rgba(131, 58, 180, 1) 0%, rgba(253, 29, 29, 1) 50%, rgba(252, 176, 69, 1) 100%);
+    color: white;
+}
+
+.start-button:hover {
+    width: 130px;
+    height: 45px;
+}
+
+.showcase {
+    display: flex;
+    flex-direction: column;
+    flex-wrap: wrap;
+    justify-content: center;
+    align-items: center;
+    height: auto;
+    width: auto;
+}
+
+.book-title {
+    text-align: center;
+    color: white;
+    background: #000000;
+    border: #9b9be2 2px solid;
+    border-radius: 5px;
+    font-size: 20px;
+    padding: 3px;
+    transform: translateY(7px);
+}
+
+.recent p {
+    color: white;
+}
+
+.title h3 {
+    margin-top: -5px;
+}
+
+.recommendations {
+    border: 2px blue solid;
+    display: flex;
+    flex-direction: column;
+    flex-wrap: wrap;
+}
+
+.recommendations h1 {
+    color: white;
+    text-align: center;
+}
+
+.trivia {
+    display: grid;
+    grid-template-columns: auto auto auto;
+    gap: 10px;
+}
+
+.trivia div {
+    color: white;
+    margin-top: 10px;
+}
+
+.trivia-border {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    border: 2px solid yellow;
+}
+
+.trivia-texts {
+    margin: auto;
+}
+
+.trivia-thumbnail {
+    max-width: 100%;
+    height: auto;
+}
+
+.trivia-texts p {
+    text-align: center;
+    padding: 20px;
+}
+
+.start {
+    display: flex;
+    flex-direction: column;
+    flex-wrap: wrap;
+    align-items: center;
+    height: 13vh;
+    width: auto;
+    margin: auto;
+    background-color: #101017;
+}
+
+.start button {
+    width: 110px;
+    height: 40px;
+    border: none;
+    border-radius: 5px;
+    font-size: 20px;
+    background-color: #024e5c;
+    color: white;
+    font-weight: bold;
+    box-shadow: 0px 6px teal;
+    display: inline-block;
+    margin: auto;
+}
+
+.gameplay-selection {
+    color: white;
+    text-align: center;
+}
+
+.gameplay-selection h1 {
+    text-align: center;
+}
+
+.gameplay-selection p:nth-child(3) {
+    border-bottom: 2px yellow solid;
+    padding-bottom: 10px;
+}
+
+.selection {
+    display: flex;
+    flex-direction: column;
+    flex-wrap: wrap;
+    margin: auto;
+}
+
+.topic-selection {
+    display: flex;
+    flex-direction: column;
+    flex-wrap: wrap;
+    gap: 20px;
+    margin-top: 10px;
+}
+
+.topic-info {
+    display: inline-flex;
+    border: 2px solid pink;
+    flex-direction: row;
+    flex-wrap: wrap;
+    background-color: #101017;
+    padding: 10px;
+    border-radius: 5px;
+}
+
+.topic-info h3 {
+    margin-top: auto;
+    margin-bottom: auto;
+}
+
+.pages {
+    margin-left: auto;
+    margin-top: auto;
+    margin-bottom: auto;
+}
+
+.result-details {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    gap: 10px;
+    color: white;
+}
+
+.result-details li {
+    display: inline-block;
+    padding: 5px;
+    border-radius: 5px;
+    background-color: #101017;
+    margin: auto;
+}
+
+.wrapper {
+    background: #1a1b26;
+    border-radius: 10px;
+    box-shadow: 0 10px 15px rgba(0, 0, 0, 0.05);
+    margin-top: 15px;
+}
+
+.wrapper .input-field {
+    opacity: 0;
+    z-index: -999;
+    position: absolute;
+}
+
+.typing-text::-webkit-scrollbar {
+    display: none;
+}
+
+.wrapper .content-box {
+    border-radius: 10px;
+    border: 5px solid #bfbfbf;
+    width: auto;
+    position: relative;
+}
+
+.content-box .typing-text {
+    overflow-x: hidden;
+    overflow-y: auto;
+    width: auto;
+    color: white;
+    background-color: #1a1b26;
+    border-bottom: 2px yellow solid;
+    padding: 30px;
+    height: 220px;
+}
+
+.letter {
+    font-size: 21px;
+    text-align: justify;
+    letter-spacing: 1px;
+}
+
+.letter.correct {
+    color: #23d10f;
+}
+
+.letter.incorrect {
+    color: #c8040a;
+    background: #413c3d;
+}
+
+.letter.active {
+    color: #00ddff;
+    animation: blink 1s ease-in-out infinite;
+    margin: auto;
+}
+
+@keyframes blink {
+
+    50% {
+        background: #b10488fe;
+        opacity: 1;
+    }
+}
+
+.content-box .results {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-between;
+    flex-direction: column;
+    padding: 5px;
+}
+
+#try-again-button {
+    outline: none;
+    border: none;
+    color: #fff;
+    font-size: 16px;
+    cursor: pointer;
+    border-radius: 5px;
+    background: #17A2B8;
+}
+
+.content .result-details {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-between;
+    padding: 10px;
+}
+
+.result-details li {
+    display: flex;
+    list-style: none;
+    position: relative;
+    align-items: center;
+}
+
+.result-details li span {
+    display: block;
+    font-size: 20px;
+    padding: 5px;
+}
+
+li span {
+    font-weight: 500;
+}
+
+.paragraphs {
+    margin-top: -30px;
+}
+
+.paragraph {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    margin-top: 25px;
+    word-break: break-word;
+    white-space: break-spaces;
+    /*border: 2px yellow solid;*/
+}
+
+.mobile-message {
+    display: none;
+    color: white;
+}
+
+.trivia-gameplay {
+    color: white;
+}
+
+.topic-info a {
+    color: inherit;
+}
+
+.topic-info :visited {
+    color: inherit;
+}
+
+.topic-info a:hover {
+    color: rgb(34, 193, 195);
+}
+
+.topic-info a:active {
+    color: inherit
+}
+
+.right-button {
+    cursor: pointer;
+}
+
+.next-button {
+    font-size: 35px;
+}
+
+.left-button {
+    cursor: pointer;
+}
+
+.previous-button {
+    font-size: 35px;
+}
+
+
+@media only screen and (max-width: 431px) {
+    .mobile-message {
+        display: block;
+        margin: auto;
+        margin-top: 10px;
+    }
+}

@@ -1,0 +1,50 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css"
+    integrity="sha512-Kc323vGBEqzTmouAECnVceyQqyqdsSiqLQISBL29aUW4U/M7pSPA/gEUZQqv1cwx4OnYxTxve5UMg5GT6L4JJg=="
+    crossOrigin="anonymous" referrerPolicy="no-referrer" />
+  <link rel="stylesheet" href="style.css">
+  <link rel="stylesheet" href="/keyboard.css">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>HyperText</title>
+</head>
+
+<body>
+
+  <header class="options">
+    <a href="/"><i class="fa-solid fa-keyboard keyboard" id="keyboardicon"></i></a>
+    <div class="title">
+      <a href="/">
+        <h3>Hyper Text</h3>
+      </a>
+    </div>
+
+    <div class="default-options">
+      <ul class="three-options">
+        <a href="/">
+          <li id="home"><i class="fa-solid fa-house"></i> Home</li>
+        </a>
+        <li><i class="fa-solid fa-book"></i> Trivia</li>
+        <li><i class="fa-solid fa-chart-simple"></i> Stats</li>
+      </ul>
+    </div>
+
+    <input type="checkbox" id="toggle" class="toggleCheckbox" />
+    <label for="toggle" class='toggleContainer toggle'>
+      <div>Dark Mode</div>
+      <div>Light Mode</div>
+    </label>
+
+    <i class="fa-solid fa-gear"></i>
+  </header>
+
+  <div id="root"></div>
+
+  <script type="module" src="/src/main.jsx"></script>
+  <script src="localforage.js" type="module"></script>
+</body>
+
+</html>
