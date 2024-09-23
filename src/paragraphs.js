@@ -77,4 +77,4 @@ let paragraphs = [
 
 ]
 
-export default paragraphs
+export default paragraphs;

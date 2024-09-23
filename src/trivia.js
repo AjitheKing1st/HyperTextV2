@@ -16,6 +16,8 @@ export default [
             { topic: "Calculus", pages: 10 },
             { topic: "Calculus II", pages: 15 },
             { topic: "Calculus III", pages: 20 },
+            { topic: "Linear Algebra", pages: 30 },
+            { topic: "Differential  Equations", pages: 40 }
         ]
     },
     {
@@ -40,7 +42,10 @@ export default [
         selection: [
             { topic: "Poetry", pages: 10 },
             { topic: "Etymology", pages: 15 },
-            { topic: "Philology", pages: 20 }
+            { topic: "Philology", pages: 20 },
+            { topic: "Creative Writing", pages: 25 },
+            { topic: "Language and Composition", pages: 30 },
+            { topic: "English Grammer and Style", pages: 35 }
         ]
     },
     {
@@ -52,8 +57,14 @@ export default [
         selection: [
             { topic: "Chernobyl Disaster", pages: 10 },
             { topic: "20s and 30s in America", pages: 15 },
-            { topic: "The Cold War", pages: 20 }
+            { topic: "The Cold War", pages: 20 },
+            { topic: "History of WWI", pages: 25 },
+            { topic: "History of WWII", pages: 30 },
+            { topic: "History of Medieval Times", pages: 35 }
         ]
-    }
+    },
+    /*
+    Other topics: Chemistry, Organic Chemistry, In-Organic Chemistry, Thermodymatics, Nursing (IF I PLAN ON UPDATING MY WEBSITE!)
+    */
 
 ]
