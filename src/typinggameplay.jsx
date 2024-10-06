@@ -196,11 +196,24 @@ function TypingGameplay() {
             });
         };
 
+        let lastSpaceTime = 0;
+
         document.addEventListener("keydown", () => inpField.focus());
         document.addEventListener("click", () => inpField.focus());
         typingText.addEventListener("click", () => inpField.focus());
         inpField.addEventListener("input", initTyping);
         inpField.addEventListener("keydown", (event) => {
+
+            if (event.key === ' ') {
+
+                const currentTime = Date.now();
+
+                if (currentTime - lastSpaceTime < 300) {
+                    event.preventDefault(); 
+                }
+
+                lastSpaceTime = currentTime;
+            }
 
             const key = event.key.toLowerCase();
 
