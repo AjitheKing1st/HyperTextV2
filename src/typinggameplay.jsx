@@ -1,20 +1,16 @@
 import { useParams, useNavigate, Navigate } from "react-router-dom";
 import { useEffect, useState, useLayoutEffect, useRef } from "react"
-import trivia from './trivia';
 import paragraphs from "./paragraphs";
+import shortcutPic from "./assets/Shortcut.jpg"
 
 function TypingGameplay() {
 
     let { subject, triviatopic } = useParams();
 
-    const topics = trivia.map((trivia) => trivia.selection);
-    const topicSection = topics.filter((topics) => topics.map((name) => name.topic == triviatopic));
-
     const [paragraphs2, setParagraphs] = useState(paragraphs);
     let [charIndex, setCharIndex] = useState(0);
     let [mistakes, setMistakes] = useState(0);
     let [letters, setLetters] = useState(0);
-    //let [wpm, setWpm] = useState(0);
     let [cpm, setCpm] = useState(0);
     let [wpm, setWpm] = useState(0);
     let [acc, setAcc] = useState(0);
@@ -196,24 +192,29 @@ function TypingGameplay() {
             });
         };
 
-        let lastSpaceTime = 0;
+        var popUpInfo = document.getElementById("pop-up");
+        let infoButton = document.querySelector(".click-me");
+        var span = document.getElementsByClassName("close")[0];
+
+        infoButton.addEventListener("click", () => {
+            popUpInfo.style.display = "block";
+        })
+
+        span.onclick = function () {
+            popUpInfo.style.display = "none";
+        }
+
+        window.onclick = function (event) {
+            if (event.target == popUpInfo) {
+                popUpInfo.style.display = "none";
+            }
+        }
 
         document.addEventListener("keydown", () => inpField.focus());
         document.addEventListener("click", () => inpField.focus());
         typingText.addEventListener("click", () => inpField.focus());
         inpField.addEventListener("input", initTyping);
         inpField.addEventListener("keydown", (event) => {
-
-            if (event.key === ' ') {
-
-                const currentTime = Date.now();
-
-                if (currentTime - lastSpaceTime < 300) {
-                    event.preventDefault(); 
-                }
-
-                lastSpaceTime = currentTime;
-            }
 
             const key = event.key.toLowerCase();
 
@@ -739,6 +740,9 @@ function TypingGameplay() {
 
     return (
         <div className="showcase" style={{ overflowY: "hidden" }}>
+
+            <button className="click-me">For Mobile Users, please click this first before you start!</button>
+
             <div>
                 <h2 className="book-title">Trivia: {triviatopic}</h2>
             </div>
@@ -1029,9 +1033,21 @@ function TypingGameplay() {
                 </div>
             </div>
 
-            <h2 className="mobile-message">
-                Press anywhere to start
-            </h2>
+            <h2 className="start-message">Press anywhere to start</h2>
+
+            <div className="mobile-message" id="pop-up">
+                <div className="special-message">
+                    <span class="close">&times;</span>
+                    <h2 className="please-read">Please Read Side Note for Mobile Users:</h2>
+                    <h1>
+                        I really recommend that you disable any keyboard shortcut
+                        that inserts a period after double tapping the space bar,
+                        as it can lead to your typing accuracy and inputs being wrong.
+                        Which can lead to your gameplay being completely inaccurate.
+                    </h1>
+                    <img src={shortcutPic} alt="Apple keyboard . Shortcut" />
+                </div>
+            </div>
         </div>
 
     )
