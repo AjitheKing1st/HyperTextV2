@@ -21,13 +21,13 @@ function TypingGameplay() {
     let [correctKeys, setCorrectKeys] = useState(0);
     let [denominater, setDenominator] = useState(0);
     let [missedCharacters, addMissedCharater] = useState([]);
+    let [wpmPerParagraphs, setWpmPerParagraphs] = useState([]);
+    let [accPerParagraph, setAccPerParagrpah] = useState([]);
     let [numOfParagraphs, setNumOfParagraphs] = useState(0);
 
     const navigate = useNavigate();
 
     const timer = useRef();
-
-    const seperateTimers = useRef();
 
     useLayoutEffect(() => {
 
@@ -115,7 +115,9 @@ function TypingGameplay() {
                         stopStopwatch();
                         clearInterval(timer.current);
                         timer.current = null;
-                        navigate(`/${subject}/${triviatopic}/results`, { state: { accuracy: ((correctKeys / denominater) * 100).toFixed(2), time: totalTime, wpm: (((inpField.value.length + incorrectLetters) / 5) / (seconds / 60)).toFixed(0), cpm: charIndex - mistakes, mistakes: mistakes, numberOfParagraphs: numOfParagraphs } });
+                        setTimeout(() => {
+                            navigate(`/${subject}/${triviatopic}/results`, { state: { accuracy: ((correctKeys / denominater) * 100).toFixed(2), time: totalTime, wpm: (((inpField.value.length + incorrectLetters) / 5) / (seconds / 60)).toFixed(2), cpm: charIndex - mistakes, mistakes: mistakes, wordsPerMinutePerParagraphs: wpmPerParagraphs, accPerParagraph: accPerParagraph } });
+                        }, 1)
                     }
                 }
 
@@ -129,7 +131,7 @@ function TypingGameplay() {
                     setWpm(0);
                 }
                 else {
-                    setWpm((((inpField.value.length + incorrectLetters) / 5) / (seconds / 60)).toFixed(0));
+                    setWpm((((inpField.value.length + incorrectLetters) / 5) / (seconds / 60)).toFixed(2));
                 }
 
                 for (let i = 0; i < words.length; i += 1) {
@@ -193,6 +195,10 @@ function TypingGameplay() {
                 keys[i].classList.remove("active");
             });
         };
+
+        function results() {
+            navigate(`/${subject}/${triviatopic}/results`, { state: { accuracy: ((correctKeys / denominater) * 100).toFixed(2), time: totalTime, wpm: (((inpField.value.length + incorrectLetters) / 5) / (seconds / 60)).toFixed(0), cpm: charIndex - mistakes, mistakes: mistakes, wordsPerMinutePerParagraphs: wpmPerParagraphs } });
+        }
 
         document.addEventListener("keydown", () => inpField.focus());
         document.addEventListener("click", () => inpField.focus());
@@ -628,6 +634,97 @@ function TypingGameplay() {
             prevBtn.style.display = "none";
             nextBtn.style.display = "block";
         };
+
+    }, []);
+
+    const seperateTimers = useRef();
+
+    useEffect(() => {
+
+        let numberOfParagraphs = document.querySelectorAll(".paragraph");
+
+        const inpField = document.querySelector(".wrapper .input-field");
+
+        let seconds;
+
+        let incorrectLetters;
+
+        let array2 = [];
+
+        const showNumOfParagraphs = () => numberOfParagraphs.forEach((p, index) => {
+            if (p.textContent !== "") {
+                array2.push(index);
+            };
+        });
+
+        showNumOfParagraphs();
+
+        let firstIndex = Math.min(...array2);
+
+        let subtraction = 0;
+
+        let wpm;
+
+        function wpmPerChapter(paragraph) {
+            let characters = paragraph.querySelectorAll(".letter");
+
+            let tempNum = inpField.value.length - subtraction;
+
+            if (seperateTimers.current === undefined) {
+                var start = Date.now();
+                seperateTimers.current = setInterval(() => {
+                    var delta = Date.now() - start;
+                    seconds = delta / 1000;
+                }, 100);
+
+            };
+
+            incorrectLetters = checkIncorrectLetters(paragraph);
+
+            wpm = (((tempNum + incorrectLetters) / 5) / (seconds / 60)).toFixed(2)
+
+            if (characters[characters.length - 1].classList.contains("correct") || characters[characters.length - 1].classList.contains("incorrect")) {
+                let accuracy = document.getElementById("accuracy");
+                accPerParagraph.push(accuracy.textContent.replace("%", ""));
+                wpmPerParagraphs.push(wpm);
+                subtraction = inpField.value.length;
+                incorrectLetters = 0;
+                seperateTimers.current = undefined;
+            }
+        }
+
+        let checkIncorrectLetters = (paragraph) => {
+            let count = 0;
+            let characters = paragraph.querySelectorAll(".letter");
+
+            characters.forEach((letter) => {
+                if (letter.classList.contains("incorrect")) {
+                    count -= 1;
+                }
+            })
+
+            return count;
+
+        };
+
+        inpField.addEventListener("input", () => {
+
+            for (let i = 0; i < numberOfParagraphs.length; i += 1) {
+                if (i == firstIndex) {
+                    if (!numberOfParagraphs[i].querySelectorAll(".letter")[numberOfParagraphs[i].querySelectorAll(".letter").length - 1].classList.contains("correct") || !numberOfParagraphs[i].querySelectorAll(".letter")[numberOfParagraphs[i].querySelectorAll(".letter").length - 1].classList.contains("incorrect")) {
+                        wpmPerChapter(numberOfParagraphs[i]);
+
+                        if (numberOfParagraphs[i].querySelectorAll(".letter")[numberOfParagraphs[i].querySelectorAll(".letter").length - 1].classList.contains("correct") || numberOfParagraphs[i].querySelectorAll(".letter")[numberOfParagraphs[i].querySelectorAll(".letter").length - 1].classList.contains("incorrect")) {
+                            firstIndex += 1;
+                        }
+                    }
+                }
+                else {
+                    continue;
+                }
+            }
+        });
+
 
     }, []);
 

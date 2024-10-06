@@ -594,17 +594,17 @@ li span {
     font-size: 35px;
 }
 
-.results-container{
+.results-container {
     border: #00ddff 2px solid;
 }
 
-.results-container h3{
+.results-container h3 {
     color: white;
     text-align: center;
     margin-top: 10px;
 }
 
-.chapter-statistics{
+.chapter-statistics {
     display: inline-flex;
     flex-wrap: wrap;
     justify-content: center;
@@ -626,6 +626,15 @@ li span {
     color: white;
 }
 
+.Chapter-Statistics-Chart {
+    width: 100%;
+    margin: auto;
+}
+
+canvas {
+    width: 100% !important;
+    height: 100% !important;
+}
 
 @media only screen and (max-width: 431px) {
     .mobile-message {

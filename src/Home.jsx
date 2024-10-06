@@ -17,14 +17,18 @@ function Home() {
             on random trivia!
           </p>
 
+          {/*
           <p>A good place to start is our step-by-step guide
             that kickstarts your adventure into the world of touch typing.
           </p>
+          */}   
 
+          {/*
           <div class="option-buttons">
             <button class="skip-button" id="skip" onClick={skip}>Skip</button>
             <a href="/Tutorial"><button class="start-button" id="start">Start Tutorial</button></a>
           </div>
+          */}
         </div>
       </section>
 
