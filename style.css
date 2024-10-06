@@ -439,9 +439,11 @@ body {
 }
 
 .wrapper .input-field {
+    /*
     opacity: 0;
     z-index: -999;
     position: absolute;
+    */
 }
 
 .typing-text::-webkit-scrollbar {
@@ -550,7 +552,6 @@ li span {
     margin-top: 25px;
     word-break: break-word;
     white-space: break-spaces;
-    /*border: 2px yellow solid;*/
 }
 
 .mobile-message {

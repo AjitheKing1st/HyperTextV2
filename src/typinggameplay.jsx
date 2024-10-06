@@ -196,10 +196,6 @@ function TypingGameplay() {
             });
         };
 
-        function results() {
-            navigate(`/${subject}/${triviatopic}/results`, { state: { accuracy: ((correctKeys / denominater) * 100).toFixed(2), time: totalTime, wpm: (((inpField.value.length + incorrectLetters) / 5) / (seconds / 60)).toFixed(0), cpm: charIndex - mistakes, mistakes: mistakes, wordsPerMinutePerParagraphs: wpmPerParagraphs } });
-        }
-
         document.addEventListener("keydown", () => inpField.focus());
         document.addEventListener("click", () => inpField.focus());
         typingText.addEventListener("click", () => inpField.focus());
