@@ -276,6 +276,7 @@ function TypingGameplay() {
 
     }, []);
 
+    /*
     useEffect(() => {
         const keys = document.querySelectorAll('.screen-keyboard-desktop button');
 
@@ -1129,7 +1130,7 @@ function TypingGameplay() {
         }
 
     }, []);
-
+    */
     useEffect(() => {
         let paragraphs = document.querySelectorAll(".paragraphs.container");
 
