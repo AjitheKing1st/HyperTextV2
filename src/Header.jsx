@@ -1,7 +1,7 @@
 function Header() {
     return (
         <header class="options">
-            <a href="/tutorial"><i class="fa-solid fa-keyboard keyboard" id="keyboardicon"></i></a>
+            <a href="/"><i class="fa-solid fa-keyboard keyboard" id="keyboardicon"></i></a>
             <div class="title">
                 <a href="/">
                     <h3>HyperText</h3>
