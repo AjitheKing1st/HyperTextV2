@@ -751,32 +751,32 @@ main {
 @media screen and (max-width: 63.99rem) {
     .prompt {
         width: 100%;
-        padding-top: .5rem
+        padding-top: .5rem;
     }
 
     .prompt-box {
-        padding: 0
+        padding: 0;
     }
 }
 
 @font-face {
     font-family: "DejaVu Serif";
-    src: local("DejaVu Serif"), url(https://dn5plg055skpb.cloudfront.net/fonts/dejavu/DejaVuSerif.ttf) format("truetype"), url(/fonts/dejavu/DejaVuSerif.ttf) format("truetype")
+    src: local("DejaVu Serif"), url(https://dn5plg055skpb.cloudfront.net/fonts/dejavu/DejaVuSerif.ttf) format("truetype"), url(/fonts/dejavu/DejaVuSerif.ttf) format("truetype");
 }
 
 @font-face {
     font-family: DejaVu Mono;
-    src: local("DejaVu Mono"), url(https://dn5plg055skpb.cloudfront.net/fonts/dejavu/DejaVuSansMono.ttf) format("truetype"), url(/fonts/dejavu/DejaVuSansMono.ttf) format("truetype")
+    src: local("DejaVu Mono"), url(https://dn5plg055skpb.cloudfront.net/fonts/dejavu/DejaVuSansMono.ttf) format("truetype"), url(/fonts/dejavu/DejaVuSansMono.ttf) format("truetype");
 }
 
 @font-face {
     font-family: Open Dyslexic;
-    src: local("OpenDyslexic"), url(https://dn5plg055skpb.cloudfront.net/fonts/open-dyslexic/OpenDyslexic-Regular.otf) format("opentype"), url(/fonts/open-dyslexic/OpenDyslexic-Regular.otf) format("opentype")
+    src: local("OpenDyslexic"), url(https://dn5plg055skpb.cloudfront.net/fonts/open-dyslexic/OpenDyslexic-Regular.otf) format("opentype"), url(/fonts/open-dyslexic/OpenDyslexic-Regular.otf) format("opentype");
 }
 
 @font-face {
     font-family: Open Dyslexic Mono;
-    src: local("OpenDyslexicMono"), url(https://dn5plg055skpb.cloudfront.net/fonts/open-dyslexic/OpenDyslexicMono-Regular.otf) format("opentype"), url(/fonts/open-dyslexic/OpenDyslexicMono-Regular.otf) format("opentype")
+    src: local("OpenDyslexicMono"), url(https://dn5plg055skpb.cloudfront.net/fonts/open-dyslexic/OpenDyslexicMono-Regular.otf) format("opentype"), url(/fonts/open-dyslexic/OpenDyslexicMono-Regular.otf) format("opentype");
 }
 
 :root {
