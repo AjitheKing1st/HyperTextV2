@@ -7,12 +7,14 @@ import TypingStatistics from "./TypingStatistics.jsx";
 import Settings from "./Settings.jsx";
 import Results from './Results.jsx';
 import TypingGameplay from './TypingGame.jsx';
+import OldTypingGameplay from './typinggameplay.jsx';
 
 function App() {
   return (
     <>
       <Routes>
         <Route index path="/" element={<Home />} />
+        <Route path = "/Math/Calculus" element={<OldTypingGameplay />}></Route>
         <Route path=":subject" element={<TriviaSelectionPage />}></Route>
         <Route path=":subject/:triviatopic" element={<TypingGameplay />}></Route>
         <Route path="/stats" element={<TypingStatistics />}></Route>
