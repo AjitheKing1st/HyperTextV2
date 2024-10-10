@@ -1,3 +1,5 @@
+@import"https://fonts.googleapis.com/css2?family=Recursive:CASL,MONO@0..1,1&family=Atkinson+Hyperlegible&family=Alegreya&family=Alegreya+Sans&family=Comic+Neue&family=Comfortaa&family=Courier+Prime&family=EB+Garamond&family=Fira+Mono&family=Gentium+Book+Plus&family=Geologica&family=JetBrains+Mono&family=Libre+Baskerville&family=Literata:opsz@7..72&family=Noto+Sans&family=Noto+Sans+Mono&family=Noto+Serif&family=Open+Sans:wght@300..800&family=Piazzolla:opsz@8..30&family=Play&family=Roboto+Mono&family=Roboto+Slab&family=Source+Code+Pro&family=Source+Serif+4:opsz@8..60&family=Ubuntu&family=Ubuntu+Mono&family=Victor+Mono&family=Vollkorn&family=Ysabeau&display=swap";
+
 * {
     box-sizing: border-box;
     scroll-behavior: smooth;
@@ -686,9 +688,6 @@ canvas {
 }
 
 /*New Stuff from here_____________________________________________________*/
-
-@import"https://fonts.googleapis.com/css2?family=Recursive:CASL,MONO@0..1,1&family=Atkinson+Hyperlegible&family=Alegreya&family=Alegreya+Sans&family=Comic+Neue&family=Comfortaa&family=Courier+Prime&family=EB+Garamond&family=Fira+Mono&family=Gentium+Book+Plus&family=Geologica&family=JetBrains+Mono&family=Libre+Baskerville&family=Literata:opsz@7..72&family=Noto+Sans&family=Noto+Sans+Mono&family=Noto+Serif&family=Open+Sans:wght@300..800&family=Piazzolla:opsz@8..30&family=Play&family=Roboto+Mono&family=Roboto+Slab&family=Source+Code+Pro&family=Source+Serif+4:opsz@8..60&family=Ubuntu&family=Ubuntu+Mono&family=Victor+Mono&family=Vollkorn&family=Ysabeau&display=swap";
-
 main {
     height: 100%
 }
@@ -747,7 +746,7 @@ main {
     color: var(--color-fg)
 }
 
-/*
+
 @media screen and (max-width: 63.99rem) {
     .prompt {
         width: 100%;
@@ -758,7 +757,6 @@ main {
         padding: 0;
     }
 }
-*/
 
 @font-face {
     font-family: "DejaVu Serif";
@@ -1140,7 +1138,6 @@ body>div>main {
     min-height: calc(100svh - 15.5rem)
 }
 
-/*
 @media screen and (max-width: 63.99rem) {
     :root {
         --nav-height: calc(var(--font-2xl) + var(--space-s) * 2)
@@ -1151,7 +1148,6 @@ body>div>main {
         min-height: calc(100svh - 3.25rem)
     }
 }
-*/
 
 .desktop-header {
     display: flex;
