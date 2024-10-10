@@ -763,20 +763,7 @@ main {
     src: local("DejaVu Serif"), url(https://dn5plg055skpb.cloudfront.net/fonts/dejavu/DejaVuSerif.ttf) format("truetype"), url(/fonts/dejavu/DejaVuSerif.ttf) format("truetype");
 }
 
-@font-face {
-    font-family: DejaVu Mono;
-    src: local("DejaVu Mono"), url(https://dn5plg055skpb.cloudfront.net/fonts/dejavu/DejaVuSansMono.ttf) format("truetype"), url(/fonts/dejavu/DejaVuSansMono.ttf) format("truetype");
-}
 
-@font-face {
-    font-family: Open Dyslexic;
-    src: local("OpenDyslexic"), url(https://dn5plg055skpb.cloudfront.net/fonts/open-dyslexic/OpenDyslexic-Regular.otf) format("opentype"), url(/fonts/open-dyslexic/OpenDyslexic-Regular.otf) format("opentype");
-}
-
-@font-face {
-    font-family: Open Dyslexic Mono;
-    src: local("OpenDyslexicMono"), url(https://dn5plg055skpb.cloudfront.net/fonts/open-dyslexic/OpenDyslexicMono-Regular.otf) format("opentype"), url(/fonts/open-dyslexic/OpenDyslexicMono-Regular.otf) format("opentype");
-}
 
 :root {
     color-scheme: dark;
