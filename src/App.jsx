@@ -6,7 +6,7 @@ import TriviaSelectionPage from "./TriviaSelectionPage.jsx"
 import TypingStatistics from "./TypingStatistics.jsx";
 import Settings from "./Settings.jsx";
 import Results from './Results.jsx';
-import TypingGameplay from './typinggameplay.jsx';
+import TypingGameplay from './TypingGame.jsx';
 
 function App() {
   return (
