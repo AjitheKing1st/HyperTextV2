@@ -1,4 +1,5 @@
 import { useEffect } from "react";
+import Header from "./Header";
 import { useLocation, useParams } from "react-router-dom";
 import { Line } from "react-chartjs-2";
 import {
@@ -223,6 +224,7 @@ function Results() {
 
     return (
         <>
+            <Header />
             <div className="results-container">
 
                 <h3>{triviatopic} Chapter Stats: </h3>

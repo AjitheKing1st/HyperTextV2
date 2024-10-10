@@ -3,10 +3,10 @@ import { BrowserRouter } from 'react-router-dom';
 import { Routes, Route } from 'react-router-dom';
 import Home from "./Home.jsx"
 import TriviaSelectionPage from "./TriviaSelectionPage.jsx"
-import TypingGameplay from './typinggameplay.jsx';
 import TypingStatistics from "./TypingStatistics.jsx";
 import Settings from "./Settings.jsx";
 import Results from './Results.jsx';
+import TypingGameplay from './typinggameplay.jsx';
 
 function App() {
   return (

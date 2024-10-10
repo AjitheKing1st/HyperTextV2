@@ -1,4 +1,5 @@
 import TriviaOptions from './TriviaOptions';
+import Header from './Header';
 
 function Home() {
 
@@ -8,9 +9,10 @@ function Home() {
 
   return (
     <>
+      <Header />
       <section id="introduction">
         <div class='recent' id="opening">
-          <h1 class='opening-title'>Welcome to Hyper Text!</h1>
+          <h1 class='opening-title'>Welcome to HyperText!</h1>
 
           <p>Practice touch typing by retyping sentences. Not only will you
             improve your typing skills, but you'll also be improving your knowledge
@@ -21,7 +23,7 @@ function Home() {
           <p>A good place to start is our step-by-step guide
             that kickstarts your adventure into the world of touch typing.
           </p>
-          */}   
+          */}
 
           {/*
           <div class="option-buttons">
