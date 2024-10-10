@@ -1138,7 +1138,7 @@ body>div>main {
     min-height: calc(100vh - 15.5rem);
     min-height: calc(100svh - 15.5rem)
 }
-*/
+
 
 @media screen and (max-width: 63.99rem) {
     :root {
@@ -1150,6 +1150,7 @@ body>div>main {
         min-height: calc(100svh - 3.25rem)
     }
 }
+*/
 
 .desktop-header {
     display: flex;
