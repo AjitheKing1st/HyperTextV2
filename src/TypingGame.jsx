@@ -179,6 +179,36 @@ function TypingGameplay() {
 
         const mobileKeys = document.querySelectorAll(".screen-keyboard .row button div");
 
+        mobileKeys.forEach((keys, index) => {
+
+            keys.addEventListener("click", () => {
+
+                inpField.focus();
+
+                if (keys.textContent !== "") {
+
+                    inpField.value += keys.textContent;
+                    initTyping();
+
+                }
+                else {
+
+                    if (index == 37) {
+
+                        if (inpField.value == "") {
+                            inpField.value = inpField.value.slice(0, -1);
+                        }
+                        else {
+                            inpField.value = inpField.value.slice(0, -1);
+                            initTyping();
+                        }
+
+                    }
+                }
+            })
+        });
+
+        /*
         if (navigator.userAgentData.mobile === false) {
 
             mobileKeys.forEach((keys, index) => {
@@ -243,7 +273,7 @@ function TypingGameplay() {
             });
 
         }
-
+        */
         var popUpInfo = document.getElementById("pop-up");
         let infoButton = document.querySelector(".click-me");
         var span = document.getElementsByClassName("close")[0];
@@ -276,7 +306,6 @@ function TypingGameplay() {
 
     }, []);
 
-    /*
     useEffect(() => {
         const keys = document.querySelectorAll('.screen-keyboard-desktop button');
 
@@ -684,6 +713,228 @@ function TypingGameplay() {
         let shiftActive = false;
         let controlActive = false;
 
+        mobileKeys[29].addEventListener("click", () => {
+
+            shiftActive = !shiftActive;
+            mobileKeys[29].style.backgroundColor = shiftActive ? '#0056b3' : '#1d1e2a';
+
+            if (shiftActive === true) {
+                mobileKeys[0].textContent = "!";
+                mobileKeys[1].textContent = "@";
+                mobileKeys[2].textContent = "#";
+                mobileKeys[3].textContent = "$";
+                mobileKeys[4].textContent = "%";
+                mobileKeys[5].textContent = "^";
+                mobileKeys[6].textContent = "&";
+                mobileKeys[7].textContent = "*";
+                mobileKeys[8].textContent = "(";
+                mobileKeys[9].textContent = ")";
+                mobileKeys[10].textContent = "Q";
+                mobileKeys[11].textContent = "W";
+                mobileKeys[12].textContent = "E";
+                mobileKeys[13].textContent = "R";
+                mobileKeys[14].textContent = "T";
+                mobileKeys[15].textContent = "Y";
+                mobileKeys[16].textContent = "U";
+                mobileKeys[17].textContent = "I";
+                mobileKeys[18].textContent = "O";
+                mobileKeys[19].textContent = "P";
+                mobileKeys[20].textContent = "A";
+                mobileKeys[21].textContent = "S";
+                mobileKeys[22].textContent = "D";
+                mobileKeys[23].textContent = "F";
+                mobileKeys[24].textContent = "G";
+                mobileKeys[25].textContent = "H";
+                mobileKeys[26].textContent = "J";
+                mobileKeys[27].textContent = "K";
+                mobileKeys[28].textContent = "L";
+                mobileKeys[30].textContent = "Z";
+                mobileKeys[31].textContent = "X";
+                mobileKeys[32].textContent = "C";
+                mobileKeys[33].textContent = "V";
+                mobileKeys[34].textContent = "B";
+                mobileKeys[35].textContent = "N";
+                mobileKeys[36].textContent = "M";
+                mobileKeys[39].textContent = "?";
+                mobileKeys[40].textContent = ";";
+                mobileKeys[42].textContent = ":";
+                mobileKeys[43].textContent = "-";
+            }
+            else {
+                mobileKeys[0].textContent = "1";
+                mobileKeys[1].textContent = "2";
+                mobileKeys[2].textContent = "3";
+                mobileKeys[3].textContent = "4";
+                mobileKeys[4].textContent = "5";
+                mobileKeys[5].textContent = "6";
+                mobileKeys[6].textContent = "7";
+                mobileKeys[7].textContent = "8";
+                mobileKeys[8].textContent = "9";
+                mobileKeys[9].textContent = "0";
+                mobileKeys[10].textContent = "q";
+                mobileKeys[11].textContent = "w";
+                mobileKeys[12].textContent = "e";
+                mobileKeys[13].textContent = "r";
+                mobileKeys[14].textContent = "t";
+                mobileKeys[15].textContent = "y";
+                mobileKeys[16].textContent = "u";
+                mobileKeys[17].textContent = "i";
+                mobileKeys[18].textContent = "o";
+                mobileKeys[19].textContent = "p";
+                mobileKeys[20].textContent = "a";
+                mobileKeys[21].textContent = "s";
+                mobileKeys[22].textContent = "d";
+                mobileKeys[23].textContent = "f";
+                mobileKeys[24].textContent = "g";
+                mobileKeys[25].textContent = "h";
+                mobileKeys[26].textContent = "j";
+                mobileKeys[27].textContent = "k";
+                mobileKeys[28].textContent = "l";
+                mobileKeys[30].textContent = "z";
+                mobileKeys[31].textContent = "x";
+                mobileKeys[32].textContent = "c";
+                mobileKeys[33].textContent = "v";
+                mobileKeys[34].textContent = "b";
+                mobileKeys[35].textContent = "n";
+                mobileKeys[36].textContent = "m";
+                mobileKeys[39].textContent = "'";
+                mobileKeys[40].textContent = ",";
+                mobileKeys[42].textContent = ".";
+                mobileKeys[43].textContent = `"`;
+            }
+
+            if (controlActive === true) {
+                controlActive = !controlActive;
+                mobileKeys[38].style.backgroundColor = controlActive ? '#0056b3' : '#1d1e2a';
+
+                mobileKeys[0].textContent = "!";
+                mobileKeys[1].textContent = "@";
+                mobileKeys[2].textContent = "#";
+                mobileKeys[3].textContent = "$";
+                mobileKeys[4].textContent = "%";
+                mobileKeys[5].textContent = "^";
+                mobileKeys[6].textContent = "&";
+                mobileKeys[7].textContent = "*";
+                mobileKeys[8].textContent = "(";
+                mobileKeys[9].textContent = ")";
+                mobileKeys[10].textContent = "Q";
+                mobileKeys[11].textContent = "W";
+                mobileKeys[12].textContent = "E";
+                mobileKeys[13].textContent = "R";
+                mobileKeys[14].textContent = "T";
+                mobileKeys[15].textContent = "Y";
+                mobileKeys[16].textContent = "U";
+                mobileKeys[17].textContent = "I";
+                mobileKeys[18].textContent = "O";
+                mobileKeys[19].textContent = "P";
+                mobileKeys[20].textContent = "A";
+                mobileKeys[21].textContent = "S";
+                mobileKeys[22].textContent = "D";
+                mobileKeys[23].textContent = "F";
+                mobileKeys[24].textContent = "G";
+                mobileKeys[25].textContent = "H";
+                mobileKeys[26].textContent = "J";
+                mobileKeys[27].textContent = "K";
+                mobileKeys[28].textContent = "L";
+                mobileKeys[30].textContent = "Z";
+                mobileKeys[31].textContent = "X";
+                mobileKeys[32].textContent = "C";
+                mobileKeys[33].textContent = "V";
+                mobileKeys[34].textContent = "B";
+                mobileKeys[35].textContent = "N";
+                mobileKeys[36].textContent = "M";
+                mobileKeys[39].textContent = "?";
+                mobileKeys[40].textContent = ";";
+                mobileKeys[42].textContent = ":";
+                mobileKeys[43].textContent = "-";
+            }
+        })
+
+        mobileKeys[38].addEventListener("click", () => {
+            controlActive = !controlActive;
+            mobileKeys[38].style.backgroundColor = controlActive ? '#0056b3' : '#1d1e2a';
+
+            if (controlActive === true) {
+                mobileKeys[10].textContent = "!";
+                mobileKeys[11].textContent = "@";
+                mobileKeys[12].textContent = "#";
+                mobileKeys[13].textContent = "$";
+                mobileKeys[14].textContent = "%";
+                mobileKeys[15].textContent = "^";
+                mobileKeys[16].textContent = "&";
+                mobileKeys[17].textContent = "*";
+                mobileKeys[18].textContent = "(";
+                mobileKeys[19].textContent = ")";
+                mobileKeys[20].textContent = "~";
+                mobileKeys[21].textContent = "<";
+                mobileKeys[22].textContent = ">";
+                mobileKeys[23].textContent = "[";
+                mobileKeys[24].textContent = "]";
+                mobileKeys[25].textContent = "{";
+                mobileKeys[26].textContent = "}";
+                mobileKeys[27].textContent = "|";
+                mobileKeys[28].textContent = "\\";
+                mobileKeys[30].textContent = "`";
+                mobileKeys[31].textContent = "/";
+                mobileKeys[32].textContent = "?";
+                mobileKeys[33].textContent = "-";
+                mobileKeys[34].textContent = "_";
+                mobileKeys[35].textContent = "+";
+                mobileKeys[36].textContent = "=";
+            }
+            else {
+                mobileKeys[10].textContent = "q";
+                mobileKeys[11].textContent = "w";
+                mobileKeys[12].textContent = "e";
+                mobileKeys[13].textContent = "r";
+                mobileKeys[14].textContent = "t";
+                mobileKeys[15].textContent = "y";
+                mobileKeys[16].textContent = "u";
+                mobileKeys[17].textContent = "i";
+                mobileKeys[18].textContent = "o";
+                mobileKeys[19].textContent = "p";
+                mobileKeys[20].textContent = "a";
+                mobileKeys[21].textContent = "s";
+                mobileKeys[22].textContent = "d";
+                mobileKeys[23].textContent = "f";
+                mobileKeys[24].textContent = "g";
+                mobileKeys[25].textContent = "h";
+                mobileKeys[26].textContent = "j";
+                mobileKeys[27].textContent = "k";
+                mobileKeys[28].textContent = "l";
+                mobileKeys[30].textContent = "z";
+                mobileKeys[31].textContent = "x";
+                mobileKeys[32].textContent = "c";
+                mobileKeys[33].textContent = "v";
+                mobileKeys[34].textContent = "b";
+                mobileKeys[35].textContent = "n";
+                mobileKeys[36].textContent = "m";
+            }
+
+            if (shiftActive === true) {
+                shiftActive = !shiftActive;
+                mobileKeys[29].style.backgroundColor = shiftActive ? '#0056b3' : '#1d1e2a';
+
+                mobileKeys[0].textContent = "1";
+                mobileKeys[1].textContent = "2";
+                mobileKeys[2].textContent = "3";
+                mobileKeys[3].textContent = "4";
+                mobileKeys[4].textContent = "5";
+                mobileKeys[5].textContent = "6";
+                mobileKeys[6].textContent = "7";
+                mobileKeys[7].textContent = "8";
+                mobileKeys[8].textContent = "9";
+                mobileKeys[9].textContent = "0";
+                mobileKeys[39].textContent = "'";
+                mobileKeys[40].textContent = ",";
+                mobileKeys[42].textContent = ".";
+                mobileKeys[43].textContent = `"`;
+            }
+
+        });
+
+
+        /*
         if (navigator.userAgentData.mobile === false) {
 
             mobileKeys[29].addEventListener("click", () => {
@@ -1128,9 +1379,10 @@ function TypingGameplay() {
 
             });
         }
+        */
 
     }, []);
-    */
+
     useEffect(() => {
         let paragraphs = document.querySelectorAll(".paragraphs.container");
 
