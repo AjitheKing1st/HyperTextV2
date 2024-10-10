@@ -758,11 +758,6 @@ main {
     }
 }
 
-@font-face {
-    font-family: "DejaVu Serif";
-    src: local("DejaVu Serif"), url(https://dn5plg055skpb.cloudfront.net/fonts/dejavu/DejaVuSerif.ttf) format("truetype"), url(/fonts/dejavu/DejaVuSerif.ttf) format("truetype");
-}
-
 
 
 :root {
