@@ -31,7 +31,7 @@ function OldTypingGameplay() {
 
         const typingText = document.querySelector(".typing-text div");
 
-        typingText.querySelectorAll(".letter")[0].classList.add("active");
+        //typingText.querySelectorAll(".letter")[0].classList.add("active");
 
         const words = document.querySelectorAll(".word");
 
@@ -513,7 +513,7 @@ function OldTypingGameplay() {
 
         for (let i = 0; i < paragraphsLimit; i += 1) {
             paragraphs[i].style.display = "none";
-            paragraphs[currentIndexOfParagraph].style.display = "block";
+            //paragraphs[currentIndexOfParagraph].style.display = "block";
         };
 
         const hideParagraphs = () => paragraphs.forEach(p => p.style.display = 'none');

@@ -14,7 +14,7 @@ function App() {
     <>
       <Routes>
         <Route index path="/" element={<Home />} />
-        <Route path = "/Math/Calculus" element={<OldTypingGameplay />}></Route>
+        <Route path = "/tutorial" element={<OldTypingGameplay />}></Route>
         <Route path=":subject" element={<TriviaSelectionPage />}></Route>
         <Route path=":subject/:triviatopic" element={<TypingGameplay />}></Route>
         <Route path="/stats" element={<TypingStatistics />}></Route>
