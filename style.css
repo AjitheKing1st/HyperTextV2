@@ -443,10 +443,14 @@ html {
 }
 
 .prompt-box .input-field {
-    opacity: 0;
-    z-index: -999;
-    position: absolute;
+    color: #000;
+    position: fixed;
     display: block;
+    font-size: 25px; 
+    top: 0;
+    z-index: 100;
+    left: -100vw;
+    background: white;
 }
 
 .prompt-box::-webkit-scrollbar {
@@ -518,12 +522,6 @@ html {
 
 .result-details li span {
     display: block;
-    font-size: 20px;
-    padding: 5px;
-}
-
-li span {
-    font-weight: 500;
 }
 
 .paragraph {
@@ -619,16 +617,13 @@ li span {
     cursor: pointer;
 }
 
-.next-button {
-    font-size: 35px;
-}
-
 .left-button {
     cursor: pointer;
 }
 
-.previous-button {
-    font-size: 35px;
+.stats-names{
+    display: flex;
+    gap: 5px;    
 }
 
 .results-container {

@@ -1661,15 +1661,15 @@ function TypingGameplay() {
                                 <li className="left-button">
                                     <i class="fa-solid fa-left-long previous-button"></i>
                                 </li>
-                                <li>
+                                <li className="stats-names">
                                     <span>WPM:</span>
                                     <span id="wpm">{wpm}</span>
                                 </li>
-                                <li>
+                                <li className="stats-names">
                                     <span>Accuracy:</span>
                                     <span id="accuracy">{acc}%</span>
                                 </li>
-                                <li>
+                                <li className="stats-names">
                                     <span>Mistakes:</span>
                                     <span id="mistakes">{mistakes}</span>
                                 </li>
