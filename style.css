@@ -443,18 +443,32 @@ html {
 }
 
 .prompt-box .input-field {
+    opacity: 0;
+    z-index: -999;
+    position: fixed;
     color: #000;
     position: fixed;
     display: block;
-    font-size: 25px; 
+    font-size: 25px;
     top: 0;
     z-index: 100;
-    left: -100vw;
     background: white;
 }
 
 .prompt-box::-webkit-scrollbar {
     display: none;
+}
+
+.mobile-input {
+    width: 100%;
+    min-height: 50px;
+    border: 1px solid #ccc;
+    padding: 10px;
+    margin-bottom: 10px;
+    overflow-y: auto;
+    color: black;
+    background: white;
+    font-size: 25px;
 }
 
 .letter {
@@ -621,9 +635,9 @@ html {
     cursor: pointer;
 }
 
-.stats-names{
+.stats-names {
     display: flex;
-    gap: 5px;    
+    gap: 5px;
 }
 
 .results-container {

@@ -177,71 +177,15 @@ function TypingGameplay() {
             return (number < 10 ? "0" : "") + number;
         };
 
+        function isMobile() {
+            return /Mobi|Android/i.test(navigator.userAgent);
+        }
+
         const mobileKeys = document.querySelectorAll(".screen-keyboard .row button div");
 
-        mobileKeys.forEach((keys, index) => {
+        if (isMobile()) {
 
-            keys.addEventListener("click", () => {
-
-                inpField.focus();
-
-                if (keys.textContent !== "") {
-
-                    inpField.value += keys.textContent;
-                    initTyping();
-
-                }
-                else {
-
-                    if (index == 37) {
-
-                        if (inpField.value == "") {
-                            inpField.value = inpField.value.slice(0, -1);
-                        }
-                        else {
-                            inpField.value = inpField.value.slice(0, -1);
-                            initTyping();
-                        }
-
-                    }
-                }
-            })
-        });
-
-        /*
-        if (navigator.userAgentData.mobile === false) {
-
-            mobileKeys.forEach((keys, index) => {
-
-                keys.addEventListener("click", () => {
-
-                    inpField.focus();
-
-                    if (keys.textContent !== "") {
-
-                        inpField.value += keys.textContent;
-                        initTyping();
-
-                    }
-                    else {
-
-                        if (index == 37) {
-
-                            if (inpField.value == "") {
-                                inpField.value = inpField.value.slice(0, -1);
-                            }
-                            else {
-                                inpField.value = inpField.value.slice(0, -1);
-                                initTyping();
-                            }
-
-                        }
-                    }
-                })
-            });
-
-        }
-        else {
+            inpField.readOnly = true;
 
             mobileKeys.forEach((keys, index) => {
 
@@ -273,7 +217,38 @@ function TypingGameplay() {
             });
 
         }
-        */
+        else {
+            inpField.readOnly = false;
+
+            mobileKeys.forEach((keys, index) => {
+
+                keys.addEventListener("click", () => {
+
+                    inpField.focus();
+
+                    if (keys.textContent !== "") {
+
+                        inpField.value += keys.textContent;
+                        initTyping();
+
+                    }
+                    else {
+
+                        if (index == 37) {
+
+                            if (inpField.value == "") {
+                                inpField.value = inpField.value.slice(0, -1);
+                            }
+                            else {
+                                inpField.value = inpField.value.slice(0, -1);
+                                initTyping();
+                            }
+                        }
+                    }
+                })
+            });
+        }
+
         var popUpInfo = document.getElementById("pop-up");
         let infoButton = document.querySelector(".click-me");
         var span = document.getElementsByClassName("close")[0];
@@ -293,7 +268,7 @@ function TypingGameplay() {
         }
 
         document.addEventListener("keydown", () => inpField.focus());
-        typingText.addEventListener("click", () => inpField.focus());
+        //typingText.addEventListener("click", () => inpField.focus());
         inpField.addEventListener("input", initTyping);
         inpField.addEventListener("keydown", (event) => {
 
@@ -1687,7 +1662,7 @@ function TypingGameplay() {
                         </div>
 
                         <div class="prompt-box hide-scrollbar">
-                            <input type="text" className="input-field" autoFocus autoCapitalize="off" autoCorrect="off" spellCheck="false" autoComplete="off" />
+                            <input type="text" className="input-field" autoCapitalize="off" autoCorrect="off" spellCheck="false" autoComplete="off" />
                             <section class="prompt">
                                 <div class="paragraphs-box">
                                     {
