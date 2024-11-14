@@ -542,7 +542,7 @@ html {
     display: flex;
     flex-direction: row;
     flex-wrap: wrap;
-    margin-top: 25px;
+    margin-top: 30px;
     word-break: break-word;
     white-space: break-spaces;
 }
@@ -696,7 +696,6 @@ canvas {
     }
 }
 
-/*New Stuff from here_____________________________________________________*/
 main {
     height: 100%
 }
@@ -1168,5 +1167,3 @@ body>div>main {
     margin-top: -20px;
     padding: 20px;
 }
-
-/*New Stuff from here_____________________________________________________*/

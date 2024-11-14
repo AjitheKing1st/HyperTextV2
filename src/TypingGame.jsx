@@ -24,7 +24,7 @@ function TypingGameplay() {
 
     const navigate = useNavigate();
 
-    const timer = useRef();
+    const wpmTimer = useRef();
 
     useLayoutEffect(() => {
 
@@ -42,28 +42,56 @@ function TypingGameplay() {
 
         const numberOfParagraphs = document.getElementsByClassName("paragraph").length;
 
+        const pausePlaySymbol = document.querySelector(".pause");
+
         setLetters(letters);
         setNumOfParagraphs(numberOfParagraphs);
 
-        let seconds;
         let incorrectLetters = 0;
         let totalTime;
+        let seconds;
+
+        let timer = {
+            days: 0,
+            hours: 0,
+            minutes: 0,
+            seconds: 0,
+            interval: null,
+            lastTypingTime: null,
+        };
+
+        let typingTimeout;
+        const typingPauseDuration = 1000;
+        let start;
+        let elapsedTime = 0; // Track cumulative time
 
         function initTyping() {
             let characters = typingText.querySelectorAll(".letter");
             let typedChar = inpField.value.split("")[charIndex];
 
-            startStopwatch();
+            const currentTime = new Date().getTime();
+            timer.lastTypingTime = currentTime;
 
-            if (timer.current === undefined) {
+            startTimer();
+
+            // Check if user stops typing for more than 1.5 seconds
+            setTimeout(() => {
+                if (new Date().getTime() - timer.lastTypingTime >= 1500) {
+                    pauseTimer();
+                    pausePlaySymbol.innerHTML = `<i class="fa-solid fa-pause"></i>`;
+                }
+            }, 1500);
+
+            if (wpmTimer.current === undefined) {
                 // Start timer to keep track of WPM
-                var start = Date.now();
-                timer.current = setInterval(() => {
-                    var delta = Date.now() - start; // milliseconds elapsed since start
+                start = Date.now();
+                wpmTimer.current = setInterval(() => {
+                    var delta = Date.now() - start + elapsedTime; // milliseconds elapsed since start
                     seconds = delta / 1000;
                 }, 100); // update about every 100ms
-
             };
+
+            onUserTyping();
 
             if (charIndex < characters.length) {
 
@@ -109,7 +137,7 @@ function TypingGameplay() {
                     setCharIndex(charIndex += 1);
 
                     if (charIndex === characters.length) {
-                        stopStopwatch();
+                        pauseTimer();
                         clearInterval(timer.current);
                         timer.current = null;
                         setTimeout(() => {
@@ -138,43 +166,8 @@ function TypingGameplay() {
                 }
             }
             else {
-                stopStopwatch();
+                pauseTimer();
             }
-        };
-
-        var startTime;
-        var stopwatchInterval;
-        var elapsedPausedTime = 0;
-
-        function startStopwatch() {
-            if (!stopwatchInterval) {
-                startTime = new Date().getTime() - elapsedPausedTime;
-                stopwatchInterval = setInterval(updateStopwatch, 1000);
-            }
-        };
-
-        function stopStopwatch() {
-            clearInterval(stopwatchInterval);
-            elapsedPausedTime = new Date().getTime() - startTime;
-            stopwatchInterval = null;
-        };
-
-        function resetStopwatch() {
-            stopStopwatch();
-            elapsedPausedTime = 0;
-        };
-
-        function updateStopwatch() {
-            var currentTime = new Date().getTime();
-            var elapsedTime = currentTime - startTime;
-            var seconds = Math.floor(elapsedTime / 1000) % 60;
-            var minutes = Math.floor(elapsedTime / 1000 / 60) % 60;
-            var displayTime = pad(minutes) + ":" + pad(seconds);
-            totalTime = displayTime;
-        };
-
-        function pad(number) {
-            return (number < 10 ? "0" : "") + number;
         };
 
         function isMobile() {
@@ -265,6 +258,52 @@ function TypingGameplay() {
             if (event.target == popUpInfo) {
                 popUpInfo.style.display = "none";
             }
+        }
+
+        function updateTimer() {
+            timer.seconds += 1;
+            if (timer.seconds >= 60) {
+                timer.seconds = 0;
+                timer.minutes += 1;
+            }
+            if (timer.minutes >= 60) {
+                timer.minutes = 0;
+                timer.hours += 1;
+            }
+            if (timer.hours >= 24) {
+                timer.hours = 0;
+                timer.days += 1;
+            }
+
+            totalTime = `${timer.days}d ${timer.hours}h ${timer.minutes}m ${timer.seconds}s`;
+        }
+
+        function startTimer() {
+            if (!timer.interval) {
+                timer.interval = setInterval(updateTimer, 1000);
+                pausePlaySymbol.innerHTML = `<i class="fa-solid fa-play"></i>`;
+            }
+        }
+
+        function pauseTimer() {
+            if (timer.interval) {
+                clearInterval(timer.interval);
+                timer.interval = null;
+            }
+        }
+
+        function onUserTyping() {
+            // Reset the timeout every time user types
+            clearTimeout(typingTimeout);
+
+            // Set a timeout to pause the interval if typing stops for 1.5 seconds
+            typingTimeout = setTimeout(() => {
+                // Clear interval to pause and save the elapsed time
+                clearInterval(wpmTimer.current);
+                wpmTimer.current = undefined;
+                // Accumulate the elapsed time up to this point
+                elapsedTime += Date.now() - start;
+            }, typingPauseDuration);
         }
 
         document.addEventListener("keydown", () => inpField.focus());
@@ -915,7 +954,6 @@ function TypingGameplay() {
         const nextBtn = document.querySelector(".right-button");
         const prevBtn = document.querySelector(".left-button");
 
-        let displayCount = 0;
         let paragraphsLimit = paragraphs.length;
 
         let array = [];
@@ -940,7 +978,6 @@ function TypingGameplay() {
             }
             else {
                 paragraphs[i].remove();
-                displayCount += 1;
             }
         };
 
@@ -1064,9 +1101,6 @@ function TypingGameplay() {
             }
         });
 
-        prevBtn.style.display = "none";
-        nextBtn.style.display = "block";
-
         let filteredParagraph = paragraphs2.filter(item => item[triviatopic]);
 
         if (!(filteredParagraph.length > 1)) {
@@ -1108,19 +1142,25 @@ function TypingGameplay() {
 
         let wpm;
 
+        let typingTimeout;
+        const typingPauseDuration = 1000;
+        let start;
+        let elapsedTime = 0;
+
         function wpmPerChapter(paragraph) {
             let characters = paragraph.querySelectorAll(".letter");
 
             let tempNum = inpField.value.length - subtraction;
 
             if (seperateTimers.current === undefined) {
-                var start = Date.now();
+                start = Date.now();
                 seperateTimers.current = setInterval(() => {
-                    var delta = Date.now() - start;
+                    var delta = Date.now() - start + elapsedTime;
                     seconds = delta / 1000;
                 }, 100);
-
             };
+
+            onUserTyping();
 
             incorrectLetters = checkIncorrectLetters(paragraph);
 
@@ -1132,7 +1172,10 @@ function TypingGameplay() {
                 wpmPerParagraphs.push(wpm);
                 subtraction = inpField.value.length;
                 incorrectLetters = 0;
+                clearInterval(seperateTimers.current);
                 seperateTimers.current = undefined;
+                elapsedTime = 0;
+                start = undefined;
             }
         }
 
@@ -1149,6 +1192,20 @@ function TypingGameplay() {
             return count;
 
         };
+
+        function onUserTyping() {
+            clearTimeout(typingTimeout);
+
+            typingTimeout = setTimeout(() => {
+
+                clearInterval(seperateTimers.current);
+
+                seperateTimers.current = undefined;
+
+                elapsedTime += Date.now() - start;
+
+            }, typingPauseDuration);
+        }
 
         inpField.addEventListener("input", () => {
 
@@ -1207,6 +1264,9 @@ function TypingGameplay() {
 
                         <div className="results">
                             <ul className="result-details">
+                                <li className="pause">
+                                    <i class="fa-solid fa-pause"></i>
+                                </li>
                                 <li className="left-button">
                                     <i class="fa-solid fa-left-long previous-button"></i>
                                 </li>

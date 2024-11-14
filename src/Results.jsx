@@ -236,7 +236,7 @@ function Results() {
                     </div>
                     <div className="time">
                         <h3>Typing Time:</h3>
-                        <h2>{time} Minutes</h2>
+                        <h2>{time}</h2>
                     </div>
                     <div className="wpm">
                         <h3>Speed:</h3>
