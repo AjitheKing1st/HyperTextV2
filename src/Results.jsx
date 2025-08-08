@@ -14,7 +14,6 @@ import {
     Legend,
 
 } from "chart.js";
-import { callback } from "chart.js/helpers";
 
 ChartJS.register(
     LineElement,

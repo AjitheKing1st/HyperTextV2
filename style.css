@@ -435,6 +435,7 @@ html {
     border-radius: 5px;
     background-color: #101017;
     margin: auto;
+    border: 2px solid white;
 }
 
 #root {
@@ -507,7 +508,8 @@ html {
     justify-content: space-between;
     flex-direction: column;
     padding: 5px;
-    border: 2px yellow solid;
+    border: 1px rgb(0, 0, 0) solid;
+    background-color: #000;
 }
 
 #try-again-button {
@@ -713,6 +715,7 @@ main {
 .prompt-box {
     overflow-y: auto;
     padding: 0 var(--space-3xl);
+    background-color: #000;
 }
 
 .prompt {
@@ -753,7 +756,6 @@ main {
 .prompt .task {
     color: var(--color-fg)
 }
-
 
 @media screen and (max-width: 63.99rem) {
     .prompt {
@@ -1164,6 +1166,6 @@ body>div>main {
 }
 
 .paragraphs-box {
-    margin-top: -20px;
-    padding: 20px;
+    margin-top: -40px;
+    padding: 20px; 
 }

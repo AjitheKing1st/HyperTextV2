@@ -1,8 +1,9 @@
 import Header from "./Header"
-import { useParams, useNavigate, Navigate } from "react-router-dom";
+import { useParams, useNavigate } from "react-router-dom";
 import { useEffect, useState, useLayoutEffect, useRef } from "react"
 import paragraphs from "./paragraphs";
-import shortcutPic from "./assets/Shortcut.jpg"
+import shortcutPic from "./assets/Shortcut.jpg";
+import localforage from "localforage";
 
 function TypingGameplay() {
 
@@ -16,17 +17,161 @@ function TypingGameplay() {
     let [wpm, setWpm] = useState(0);
     let [acc, setAcc] = useState(0);
     let [correctKeys, setCorrectKeys] = useState(0);
+    let [incorrectLetter, setIncorrectLetters] = useState(0);
     let [denominater, setDenominator] = useState(0);
     let [missedCharacters, addMissedCharater] = useState([]);
     let [wpmPerParagraphs, setWpmPerParagraphs] = useState([]);
     let [accPerParagraph, setAccPerParagrpah] = useState([]);
     let [numOfParagraphs, setNumOfParagraphs] = useState(0);
+    let [wpmSeconds, setWpmSeconds] = useState(0);
+    let [totalTimeInTotal, setTotalTime] = useState("");
+    let [elapsedTime, setElapsedTime] = useState(0);
+    let [paragraphIndex, setParagraphIndex] = useState(0);
+    let [paragraphElapsedTimers, setParagraphElapsedTimers] = useState([]);
+    let [typedValueNumber, setTypedValueNumber] = useState(0);
+    let [typedProgress, setTypedProgress] = useState("");
+    const [progressRestored, setProgressRestored] = useState(false);
+
+    const levelKey = `${subject}: ${triviatopic}`;
+
+    const getProgressData = () => ({
+        wpm,
+        cpm,
+        accuracy: acc,
+        mistakes,
+        charIndex,
+        correctKeys,
+        denominater,
+        missedCharacters,
+        wpmPerParagraphs,
+        accPerParagraph,
+        wpmSeconds,
+        totalTimeInTotal,
+        elapsedTime,
+        paragraphElapsedTimers,
+        paragraphIndex,
+        typedValueNumber,
+        typedProgress,
+    });
+
+    const saveProgress = async (progress) => {
+        try {
+            await localforage.setItem(levelKey, progress);
+        } catch (error) {
+            console.error("Error saving progress:", error);
+        }
+    };
+
+    const loadProgress = async () => {
+        try {
+            const savedProgress = await localforage.getItem(levelKey);
+            if (savedProgress) {
+                setWpm(savedProgress.wpm || 0);
+                setCpm(savedProgress.cpm || 0);
+                setAcc(savedProgress.accuracy || 0);
+                setMistakes(savedProgress.mistakes || 0);
+                setCharIndex(savedProgress.charIndex || 0);
+                setCorrectKeys(savedProgress.correctKeys || 0);
+                setDenominator(savedProgress.denominater || 0);
+                addMissedCharater(savedProgress.missedCharacters || []);
+                setWpmPerParagraphs(savedProgress.wpmPerParagraphs || []);
+                setAccPerParagrpah(savedProgress.accPerParagraph || []);
+                setWpmSeconds(savedProgress.wpmSeconds || 0);
+                setTotalTime(savedProgress.totalTimeInTotal || "");
+                setIncorrectLetters(savedProgress.incorrectLetter || 0);
+                setElapsedTime(savedProgress.elapsedTime || 0);
+                setTypedProgress(savedProgress.typedProgress || "");
+                setParagraphIndex(savedProgress.paragraphIndex || 0);
+                setParagraphElapsedTimers(savedProgress.paragraphElapsedTimers || []);
+                setTypedValueNumber(savedProgress.typedValueNumber || 0);
+            }
+
+            setProgressRestored(true);
+
+        } catch (error) {
+            console.error("Error loading progress:", error);
+            setProgressRestored(true);
+        }
+    };
+
+    const resetProgress = async () => {
+        await clearProgress();
+        resetGameState();
+        console.log('Progress has been reset.');
+    };
+
+    const resetGameState = () => {
+
+        const inpField = document.querySelector(".prompt-box .input-field");
+
+        inpField.value = "";
+
+        setWpm(0);
+        setCpm(0);
+        setAcc(0);
+        setIncorrectLetters(0);
+        setMistakes(0);
+        setCharIndex(0);
+        setCorrectKeys(0);
+        setDenominator(0);
+        addMissedCharater([]);
+        setWpmPerParagraphs([]);
+        setAccPerParagrpah([]);
+        setWpmSeconds(0);
+        setTotalTime("");
+        setElapsedTime(0);
+        setTypedProgress("");
+        setParagraphIndex(0);
+        setParagraphElapsedTimers([]);
+        setTypedValueNumber(0);
+
+        async function resetTimer() {
+            try {
+                await localforage.removeItem(`${levelKey} Total Time`);
+            } catch (error) {
+                console.error("Failed to reset timer progress:", error);
+            }
+        }
+
+        resetTimer();
+
+    };
+
+    const clearProgress = async () => {
+        try {
+            await localforage.removeItem(levelKey);
+            await localforage.removeItem(`${levelKey} Total Time`);
+            console.log('Progress cleared successfully.');
+        } catch (error) {
+            console.error('Error clearing progress:', error);
+        }
+    };
+
+    const restart = async () => {
+        await resetProgress();
+        window.location.reload();
+    };
+
+    useEffect(() => {
+        loadProgress();
+    }, []);
+
+    useEffect(() => {
+        const autosaveInterval = setInterval(() => {
+            const progressData = getProgressData();
+            saveProgress(progressData);
+        }, 500);
+
+        return () => clearInterval(autosaveInterval);
+    }, [wpm, cpm, acc, mistakes, incorrectLetter, charIndex, correctKeys, denominater, missedCharacters, wpmPerParagraphs, accPerParagraph, wpmSeconds, totalTimeInTotal, elapsedTime, paragraphElapsedTimers, paragraphIndex, typedValueNumber, typedProgress]);
 
     const navigate = useNavigate();
 
     const wpmTimer = useRef();
 
     useLayoutEffect(() => {
+
+        if (!progressRestored) return;
 
         const inpField = document.querySelector(".prompt-box .input-field");
 
@@ -35,8 +180,6 @@ function TypingGameplay() {
         typingText.querySelectorAll(".letter")[0].classList.add("active");
 
         const words = document.querySelectorAll(".word");
-
-        const textBox = document.querySelector(".prompt-box");
 
         const letters = typingText.querySelectorAll(".letter").length;
 
@@ -47,8 +190,6 @@ function TypingGameplay() {
         setLetters(letters);
         setNumOfParagraphs(numberOfParagraphs);
 
-        let incorrectLetters = 0;
-        let totalTime;
         let seconds;
 
         let timer = {
@@ -63,9 +204,10 @@ function TypingGameplay() {
         let typingTimeout;
         const typingPauseDuration = 1000;
         let start;
-        let elapsedTime = 0; // Track cumulative time
+        let date;
 
         function initTyping() {
+
             let characters = typingText.querySelectorAll(".letter");
             let typedChar = inpField.value.split("")[charIndex];
 
@@ -74,22 +216,22 @@ function TypingGameplay() {
 
             startTimer();
 
-            // Check if user stops typing for more than 1.5 seconds
             setTimeout(() => {
                 if (new Date().getTime() - timer.lastTypingTime >= 1500) {
                     pauseTimer();
-                    pausePlaySymbol.innerHTML = `<i class="fa-solid fa-pause"></i>`;
+                    pausePlaySymbol.innerHTML = `<i class="fa-solid fa-play"></i>`;
                 }
             }, 1500);
 
             if (wpmTimer.current === undefined) {
-                // Start timer to keep track of WPM
                 start = Date.now();
                 wpmTimer.current = setInterval(() => {
-                    var delta = Date.now() - start + elapsedTime; // milliseconds elapsed since start
-                    seconds = delta / 1000;
-                }, 100); // update about every 100ms
+                    date = Date.now() - start + elapsedTime;
+                    seconds = date / 1000;
+                }, 100);
             };
+
+            setTypedProgress(inpField.value);
 
             onUserTyping();
 
@@ -101,7 +243,7 @@ function TypingGameplay() {
                         if (characters[charIndex].classList.contains("incorrect")) {
                             setMistakes(mistakes -= 1);
                             setDenominator(denominater -= 1);
-                            incorrectLetters += 1;
+                            setIncorrectLetters(incorrectLetter += 1);
 
                             for (let i = missedCharacters.length - 1; i >= 0; i -= 1) {
                                 if (characters[charIndex].innerText != missedCharacters[i]) {
@@ -110,16 +252,12 @@ function TypingGameplay() {
                                     break;
                                 }
                             }
-
-                            textBox.scrollBy(0, -1);
                         }
                         else {
                             setCorrectKeys(correctKeys -= 1);
                             setDenominator(denominater -= 1);
-                            textBox.scrollBy(0, -1);
                         }
                         characters[charIndex].classList.remove("correct", "incorrect");
-                        textBox.scrollBy(0, -1);
                     }
                 } else {
                     if (characters[charIndex].innerText == typedChar) {
@@ -132,7 +270,7 @@ function TypingGameplay() {
                         missedCharacters.push(characters[charIndex].innerText);
                         characters[charIndex].innerText = typedChar;
                         setDenominator(denominater += 1);
-                        incorrectLetters -= 1;
+                        setIncorrectLetters(incorrectLetter -= 1);
                     }
                     setCharIndex(charIndex += 1);
 
@@ -140,9 +278,12 @@ function TypingGameplay() {
                         pauseTimer();
                         clearInterval(timer.current);
                         timer.current = null;
-                        setTimeout(() => {
-                            navigate(`/${subject}/${triviatopic}/results`, { state: { accuracy: ((correctKeys / denominater) * 100).toFixed(2), time: totalTime, wpm: (((inpField.value.length + incorrectLetters) / 5) / (seconds / 60)).toFixed(2), cpm: charIndex - mistakes, mistakes: mistakes, wordsPerMinutePerParagraphs: wpmPerParagraphs, accPerParagraph: accPerParagraph } });
-                        }, 1)
+                        const finalTime = `${timer.days}d ${timer.hours}h ${timer.minutes}m ${timer.seconds}s`;
+
+                        setInterval(() => {
+                            navigate(`/${subject}/${triviatopic}/results`, { state: { accuracy: ((correctKeys / denominater) * 100).toFixed(2), time: finalTime, wpm: (((inpField.value.length + incorrectLetter) / 5) / (seconds / 60)).toFixed(2), cpm: charIndex - mistakes, mistakes: mistakes, wordsPerMinutePerParagraphs: wpmPerParagraphs, accPerParagraph: accPerParagraph } });
+                        }, 100)
+
                     }
                 }
 
@@ -152,23 +293,105 @@ function TypingGameplay() {
                 setCpm(charIndex - mistakes);
                 setAcc(((correctKeys / denominater) * 100).toFixed(2));
 
-                if (wpm < 0) {
-                    setWpm(0);
+                let currentSeconds = seconds > 0 ? seconds : elapsedTime / 1000;
+
+                if (currentSeconds === 0) {
+                    currentSeconds = 1;
                 }
-                else {
-                    setWpm((((inpField.value.length + incorrectLetters) / 5) / (seconds / 60)).toFixed(2));
-                }
+
+                setWpm((((inpField.value.length + incorrectLetter) / 5) / (currentSeconds / 60)).toFixed(2));
 
                 for (let i = 0; i < words.length; i += 1) {
                     if (words[i].querySelectorAll(".letter")[0].classList.contains("active")) {
-                        textBox.scrollBy(0, 2);
                     }
                 }
             }
             else {
                 pauseTimer();
             }
+
         };
+
+        function onUserTyping() {
+
+            clearTimeout(typingTimeout);
+
+            typingTimeout = setTimeout(() => {
+
+                clearInterval(wpmTimer.current);
+
+                wpmTimer.current = undefined;
+
+                elapsedTime += Date.now() - start;
+
+                setElapsedTime(elapsedTime);
+
+                localStorage.setItem("elapsedTime", elapsedTime);
+
+            }, typingPauseDuration);
+        }
+
+        function updateTimer() {
+            timer.seconds += 1;
+            if (timer.seconds >= 60) {
+                timer.seconds = 0;
+                timer.minutes += 1;
+            }
+            if (timer.minutes >= 60) {
+                timer.minutes = 0;
+                timer.hours += 1;
+            }
+            if (timer.hours >= 24) {
+                timer.hours = 0;
+                timer.days += 1;
+            }
+
+            setTotalTime(`${timer.days}d ${timer.hours}h ${timer.minutes}m ${timer.seconds}s`);
+            saveTimerProgress();
+        }
+
+        function startTimer() {
+            if (!timer.interval) {
+                timer.interval = setInterval(updateTimer, 1000);
+                pausePlaySymbol.innerHTML = `<i class="fa-solid fa-pause"></i>`;
+            }
+        }
+
+        function pauseTimer() {
+            if (timer.interval) {
+                clearInterval(timer.interval);
+                timer.interval = null;
+            }
+        }
+
+        async function saveTimerProgress() {
+            try {
+                await localforage.setItem(`${levelKey} Total Time`, {
+                    days: timer.days,
+                    hours: timer.hours,
+                    minutes: timer.minutes,
+                    seconds: timer.seconds,
+                });
+            } catch (error) {
+                console.error("Failed to save timer progress:", error);
+            }
+        }
+
+        async function restoreTimerProgress() {
+            try {
+                const savedProgress = await localforage.getItem(`${levelKey} Total Time`);
+                if (savedProgress) {
+                    timer.days = savedProgress.days || 0;
+                    timer.hours = savedProgress.hours || 0;
+                    timer.minutes = savedProgress.minutes || 0;
+                    timer.seconds = savedProgress.seconds || 0;
+
+                    setTotalTime(`${timer.days}d ${timer.hours}h ${timer.minutes}m ${timer.seconds}s`);
+                }
+            } catch (error) {
+                console.error("Failed to restore timer progress:", error);
+            }
+        }
 
         function isMobile() {
             return /Mobi|Android/i.test(navigator.userAgent);
@@ -182,11 +405,11 @@ function TypingGameplay() {
 
             mobileKeys.forEach((keys, index) => {
 
-                keys.addEventListener("click", () => {
+                keys.addEventListener("touchstart", () => {
 
                     inpField.focus();
 
-                    if (keys.textContent !== "") {
+                    if (keys.textContent !== "" && (index != 44 || index != 38 || index != 29)) {
 
                         inpField.value += keys.textContent;
                         initTyping();
@@ -203,12 +426,10 @@ function TypingGameplay() {
                                 inpField.value = inpField.value.slice(0, -1);
                                 initTyping();
                             }
-
                         }
                     }
                 })
             });
-
         }
         else {
             inpField.readOnly = false;
@@ -219,7 +440,7 @@ function TypingGameplay() {
 
                     inpField.focus();
 
-                    if (keys.textContent !== "") {
+                    if (keys.textContent !== "" && (index != 44 || index != 38 || index != 29)) {
 
                         inpField.value += keys.textContent;
                         initTyping();
@@ -260,50 +481,10 @@ function TypingGameplay() {
             }
         }
 
-        function updateTimer() {
-            timer.seconds += 1;
-            if (timer.seconds >= 60) {
-                timer.seconds = 0;
-                timer.minutes += 1;
-            }
-            if (timer.minutes >= 60) {
-                timer.minutes = 0;
-                timer.hours += 1;
-            }
-            if (timer.hours >= 24) {
-                timer.hours = 0;
-                timer.days += 1;
-            }
+        const firstLetter = typingText.querySelector(".letter");
 
-            totalTime = `${timer.days}d ${timer.hours}h ${timer.minutes}m ${timer.seconds}s`;
-        }
-
-        function startTimer() {
-            if (!timer.interval) {
-                timer.interval = setInterval(updateTimer, 1000);
-                pausePlaySymbol.innerHTML = `<i class="fa-solid fa-play"></i>`;
-            }
-        }
-
-        function pauseTimer() {
-            if (timer.interval) {
-                clearInterval(timer.interval);
-                timer.interval = null;
-            }
-        }
-
-        function onUserTyping() {
-            // Reset the timeout every time user types
-            clearTimeout(typingTimeout);
-
-            // Set a timeout to pause the interval if typing stops for 1.5 seconds
-            typingTimeout = setTimeout(() => {
-                // Clear interval to pause and save the elapsed time
-                clearInterval(wpmTimer.current);
-                wpmTimer.current = undefined;
-                // Accumulate the elapsed time up to this point
-                elapsedTime += Date.now() - start;
-            }, typingPauseDuration);
+        if (firstLetter && (firstLetter.classList.contains("correct") || firstLetter.classList.contains("incorrect"))) {
+            firstLetter.classList.remove("active");
         }
 
         document.addEventListener("keydown", () => inpField.focus());
@@ -312,12 +493,64 @@ function TypingGameplay() {
 
             const key = event.key.toLowerCase();
 
-            if (key == "arrowup" || key == "arrowdown" || key == "arrowleft" || key == "arrowright") {
+            if (["arrowup", "arrowdown", "arrowleft", "arrowright"].includes(key)) {
                 event.preventDefault();
             }
         });
 
-    }, []);
+        restoreTimerProgress();
+
+        return () => {
+            inpField.removeEventListener("input", initTyping);
+            inpField.removeEventListener("keydown", (event) => {
+                const key = event.key.toLowerCase();
+                if (["arrowup", "arrowdown", "arrowleft", "arrowright"].includes(key)) {
+                    event.preventDefault();
+                }
+            });
+
+            if (wpmTimer.current) {
+                clearInterval(wpmTimer.current);
+            }
+            if (typingTimeout) {
+                clearTimeout(typingTimeout);
+            }
+            if (timer.interval) {
+                clearInterval(timer.interval);
+            }
+        };
+
+    }, [progressRestored]);
+
+    useLayoutEffect(() => {
+        const inpField = document.querySelector(".prompt-box .input-field");
+        const typingText = document.querySelector(".prompt");
+
+        if (typedProgress) {
+
+            inpField.value = typedProgress;
+
+            setCharIndex(typedProgress.length);
+
+            const characters = typingText.querySelectorAll(".letter");
+
+            typedProgress.split("").forEach((char, index) => {
+                if (characters[index]) {
+                    if (characters[index].innerText === char) {
+                        characters[index].classList.add("correct");
+                    } else {
+                        characters[index].innerText = char;
+                        characters[index].classList.add("incorrect");
+                    }
+                }
+            });
+
+            if (typedProgress.length < characters.length) {
+                characters.forEach((char) => char.classList.remove("active"));
+                characters[typedProgress.length].classList.add("active");
+            }
+        }
+    }, [typedProgress]);
 
     useEffect(() => {
         const keys = document.querySelectorAll('.screen-keyboard-desktop button');
@@ -927,7 +1160,6 @@ function TypingGameplay() {
             if (shiftActive === true) {
                 shiftActive = !shiftActive;
                 mobileKeys[29].style.backgroundColor = shiftActive ? '#0056b3' : '#1d1e2a';
-
                 mobileKeys[0].textContent = "1";
                 mobileKeys[1].textContent = "2";
                 mobileKeys[2].textContent = "3";
@@ -959,6 +1191,8 @@ function TypingGameplay() {
         let array = [];
 
         const typingSection = document.querySelector(".prompt-box");
+
+        const mobileKeys = document.querySelectorAll(".screen-keyboard .row button div");
 
         const hideAll = () => paragraphs.forEach((p, index) => {
             if (p.textContent !== "") {
@@ -1101,6 +1335,62 @@ function TypingGameplay() {
             }
         });
 
+        mobileKeys.forEach((keys, index) => {
+
+            keys.addEventListener("touchstart", () => {
+
+                if (index == 44) {
+
+                    if (currentIndexOfParagraph < maxIndexOfParagraph) {
+
+                        currentIndexOfParagraph += 1;
+
+                        if (currentIndexOfParagraph == maxIndexOfParagraph) {
+                            nextBtn.style.display = "none";
+                        }
+                    }
+                    else {
+                        return;
+                    }
+
+                    checkFirstParagraph();
+                    hideParagraphs();
+                    paragraphs[currentIndexOfParagraph].style.display = "block";
+                    prevBtn.style.display = "block";
+                    typingSection.scrollTop = 0;
+
+                }
+            })
+        });
+
+        mobileKeys.forEach((keys, index) => {
+
+            keys.addEventListener("click", () => {
+
+                if (index == 44) {
+
+                    if (currentIndexOfParagraph < maxIndexOfParagraph) {
+
+                        currentIndexOfParagraph += 1;
+
+                        if (currentIndexOfParagraph == maxIndexOfParagraph) {
+                            nextBtn.style.display = "none";
+                        }
+                    }
+                    else {
+                        return;
+                    }
+
+                    checkFirstParagraph();
+                    hideParagraphs();
+                    paragraphs[currentIndexOfParagraph].style.display = "block";
+                    prevBtn.style.display = "block";
+                    typingSection.scrollTop = 0;
+
+                }
+            })
+        });
+
         let filteredParagraph = paragraphs2.filter(item => item[triviatopic]);
 
         if (!(filteredParagraph.length > 1)) {
@@ -1117,6 +1407,8 @@ function TypingGameplay() {
     const seperateTimers = useRef();
 
     useEffect(() => {
+
+        if (!progressRestored) return;
 
         let numberOfParagraphs = document.querySelectorAll(".paragraph");
 
@@ -1136,18 +1428,38 @@ function TypingGameplay() {
 
         showNumOfParagraphs();
 
-        let firstIndex = Math.min(...array2);
-
         let subtraction = 0;
 
         let wpm;
 
         let typingTimeout;
+
         const typingPauseDuration = 1000;
+
         let start;
-        let elapsedTime = 0;
+
+        let elapsedTimer;
+
+        if (paragraphElapsedTimers.length === 0) {
+            elapsedTimer = 0;
+        }
+        else {
+            var max = Math.max(...paragraphElapsedTimers);
+            elapsedTimer = max;
+        }
+
+        const typingText = document.querySelector(".prompt");
+
+        const letters = typingText.querySelectorAll(".letter").length;
+
+        let accuracy = document.getElementById("accuracy");
+
+        if (typedValueNumber > 0) {
+            subtraction = typedValueNumber;
+        }
 
         function wpmPerChapter(paragraph) {
+
             let characters = paragraph.querySelectorAll(".letter");
 
             let tempNum = inpField.value.length - subtraction;
@@ -1155,7 +1467,7 @@ function TypingGameplay() {
             if (seperateTimers.current === undefined) {
                 start = Date.now();
                 seperateTimers.current = setInterval(() => {
-                    var delta = Date.now() - start + elapsedTime;
+                    var delta = Date.now() - start + elapsedTimer;
                     seconds = delta / 1000;
                 }, 100);
             };
@@ -1164,18 +1476,28 @@ function TypingGameplay() {
 
             incorrectLetters = checkIncorrectLetters(paragraph);
 
-            wpm = (((tempNum + incorrectLetters) / 5) / (seconds / 60)).toFixed(2)
+            let currentSeconds = seconds > 0 ? seconds : elapsedTimer / 1000;
 
-            if (characters[characters.length - 1].classList.contains("correct") || characters[characters.length - 1].classList.contains("incorrect")) {
-                let accuracy = document.getElementById("accuracy");
+            if (currentSeconds === 0) {
+                currentSeconds = 1;
+            }
+
+            wpm = (((tempNum + incorrectLetters) / 5) / (currentSeconds / 60)).toFixed(2);
+
+            if (characters[characters.length - 2].classList.contains("correct") || characters[characters.length - 2].classList.contains("incorrect")) {
                 accPerParagraph.push(accuracy.textContent.replace("%", ""));
                 wpmPerParagraphs.push(wpm);
                 subtraction = inpField.value.length;
+                setTypedValueNumber(subtraction);
                 incorrectLetters = 0;
                 clearInterval(seperateTimers.current);
                 seperateTimers.current = undefined;
-                elapsedTime = 0;
+                elapsedTimer = 0;
                 start = undefined;
+            }
+            else if (inpField.value.length === letters) {
+                accPerParagraph.push(accuracy.textContent.replace("%", ""));
+                wpmPerParagraphs.push(wpm);
             }
         }
 
@@ -1194,6 +1516,7 @@ function TypingGameplay() {
         };
 
         function onUserTyping() {
+
             clearTimeout(typingTimeout);
 
             typingTimeout = setTimeout(() => {
@@ -1202,53 +1525,54 @@ function TypingGameplay() {
 
                 seperateTimers.current = undefined;
 
-                elapsedTime += Date.now() - start;
+                elapsedTimer += Date.now() - start;
+
+                paragraphElapsedTimers.push(elapsedTimer);
+
+                if (paragraphElapsedTimers.length > 1) {
+                    paragraphElapsedTimers.splice(0, paragraphElapsedTimers.length - 1);
+                }
 
             }, typingPauseDuration);
         }
 
-        inpField.addEventListener("input", () => {
-
-            for (let i = 0; i < numberOfParagraphs.length; i += 1) {
-                if (i == firstIndex) {
-                    if (!numberOfParagraphs[i].querySelectorAll(".letter")[numberOfParagraphs[i].querySelectorAll(".letter").length - 1].classList.contains("correct") || !numberOfParagraphs[i].querySelectorAll(".letter")[numberOfParagraphs[i].querySelectorAll(".letter").length - 1].classList.contains("incorrect")) {
-                        wpmPerChapter(numberOfParagraphs[i]);
-
-                        if (numberOfParagraphs[i].querySelectorAll(".letter")[numberOfParagraphs[i].querySelectorAll(".letter").length - 1].classList.contains("correct") || numberOfParagraphs[i].querySelectorAll(".letter")[numberOfParagraphs[i].querySelectorAll(".letter").length - 1].classList.contains("incorrect")) {
-                            firstIndex += 1;
-                        }
-                    }
-                }
-                else {
-                    continue;
-                }
-            }
-        });
-
         const mobileKeys = document.querySelectorAll(".screen-keyboard .row button div");
 
-        mobileKeys.forEach((keys) => {
-            keys.addEventListener("click", () => {
+        function handleParagraphCompletion() {
+            for (let i = 0; i < numberOfParagraphs.length; i += 1) {
 
-                for (let i = 0; i < numberOfParagraphs.length; i += 1) {
-                    if (i == firstIndex) {
-                        if (!numberOfParagraphs[i].querySelectorAll(".letter")[numberOfParagraphs[i].querySelectorAll(".letter").length - 1].classList.contains("correct") || !numberOfParagraphs[i].querySelectorAll(".letter")[numberOfParagraphs[i].querySelectorAll(".letter").length - 1].classList.contains("incorrect")) {
-                            wpmPerChapter(numberOfParagraphs[i]);
+                if (i == paragraphIndex) {
 
-                            if (numberOfParagraphs[i].querySelectorAll(".letter")[numberOfParagraphs[i].querySelectorAll(".letter").length - 1].classList.contains("correct") || numberOfParagraphs[i].querySelectorAll(".letter")[numberOfParagraphs[i].querySelectorAll(".letter").length - 1].classList.contains("incorrect")) {
-                                firstIndex += 1;
-                            }
+                    if (!numberOfParagraphs[i].querySelectorAll(".letter")[numberOfParagraphs[i].querySelectorAll(".letter").length - 2].classList.contains("correct") || !numberOfParagraphs[i].querySelectorAll(".letter")[numberOfParagraphs[i].querySelectorAll(".letter").length - 2].classList.contains("incorrect")) {
+
+                        wpmPerChapter(numberOfParagraphs[i]);
+
+                        if (numberOfParagraphs[i].querySelectorAll(".letter")[numberOfParagraphs[i].querySelectorAll(".letter").length - 2].classList.contains("correct") || numberOfParagraphs[i].querySelectorAll(".letter")[numberOfParagraphs[i].querySelectorAll(".letter").length - 2].classList.contains("incorrect")) {
+                            setParagraphIndex(paragraphIndex += 1)
                         }
                     }
-                    else {
-                        continue;
-                    }
                 }
+            }
+        }
 
-            })
-        });
+        inpField.addEventListener("input", handleParagraphCompletion);
 
-    }, []);
+        function isMobile() {
+            return /Mobi|Android/i.test(navigator.userAgent);
+        }
+
+        if (isMobile()) {
+            mobileKeys.forEach((key) => {
+                key.addEventListener("touchstart", handleParagraphCompletion)
+            });
+        }
+        else {
+            mobileKeys.forEach((key) => {
+                key.addEventListener("click", handleParagraphCompletion)
+            });
+        }
+
+    }, [progressRestored]);
 
     return (
         <>
@@ -1265,7 +1589,7 @@ function TypingGameplay() {
                         <div className="results">
                             <ul className="result-details">
                                 <li className="pause">
-                                    <i class="fa-solid fa-pause"></i>
+                                    <i class="fa-solid fa-play"></i>
                                 </li>
                                 <li className="left-button">
                                     <i class="fa-solid fa-left-long previous-button"></i>
@@ -1283,7 +1607,7 @@ function TypingGameplay() {
                                     <span id="mistakes">{mistakes}</span>
                                 </li>
                                 <li id="try-again-button">
-                                    <span onClick={() => location.reload()}>Try Again</span>
+                                    <span onClick={() => restart()}>Try Again</span>
                                 </li>
                                 <li className="right-button">
                                     <i class="fa-solid fa-right-long next-button"></i>
@@ -1292,7 +1616,7 @@ function TypingGameplay() {
                         </div>
 
                         <div>
-                            <h2 className="book-title">Trivia: {triviatopic}</h2>
+                            <h2 className="book-title">{subject}: {triviatopic}</h2>
                         </div>
 
                         <div class="prompt-box hide-scrollbar">
@@ -1738,8 +2062,6 @@ function TypingGameplay() {
                                 <img src={shortcutPic} alt="Apple keyboard . Shortcut" />
                             </div>
                         </div>
-
-                        {/*<h2 className="start-message">Press anywhere to start</h2>*/}
 
                     </div>
 
