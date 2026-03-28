@@ -1,5 +1,3 @@
-import { useState } from 'react'
-import { BrowserRouter } from 'react-router-dom';
 import { Routes, Route } from 'react-router-dom';
 import Home from "./Home.jsx"
 import TriviaSelectionPage from "./TriviaSelectionPage.jsx"

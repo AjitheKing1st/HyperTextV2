@@ -684,6 +684,35 @@ canvas {
     height: 100% !important;
 }
 
+.statsContainer{
+    display: flex;          
+    justify-content: center; 
+    align-items: center;              
+    background-color: black;
+    margin-top: 30px; 
+    flex-wrap: wrap; 
+    gap: 80px;
+    flex-direction: row;
+}
+
+.square{          
+    display: flex;
+    flex-wrap: wrap;          
+    justify-content: center;
+    flex-direction: column; 
+}
+
+.square h4{
+    font-size: 24px;
+    text-align: center;
+}
+
+.square p{
+    font-size: 20px;
+    text-align: center;
+    margin-top: 20px;
+}
+
 @media only screen and (max-width: 431px) {
     .start-message {
         display: block;

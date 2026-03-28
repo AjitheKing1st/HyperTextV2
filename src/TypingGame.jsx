@@ -30,6 +30,7 @@ function TypingGameplay() {
     let [paragraphElapsedTimers, setParagraphElapsedTimers] = useState([]);
     let [typedValueNumber, setTypedValueNumber] = useState(0);
     let [typedProgress, setTypedProgress] = useState("");
+    let [mostRecentTime, setMostRecentTime] = useState("");
     const [progressRestored, setProgressRestored] = useState(false);
 
     const levelKey = `${subject}: ${triviatopic}`;
@@ -52,6 +53,7 @@ function TypingGameplay() {
         paragraphIndex,
         typedValueNumber,
         typedProgress,
+        mostRecentTime
     });
 
     const saveProgress = async (progress) => {
@@ -84,6 +86,7 @@ function TypingGameplay() {
                 setParagraphIndex(savedProgress.paragraphIndex || 0);
                 setParagraphElapsedTimers(savedProgress.paragraphElapsedTimers || []);
                 setTypedValueNumber(savedProgress.typedValueNumber || 0);
+                setMostRecentTime(savedProgress.mostRecentTime || "");
             }
 
             setProgressRestored(true);
@@ -158,12 +161,22 @@ function TypingGameplay() {
 
     useEffect(() => {
         const autosaveInterval = setInterval(() => {
+
+            const now = new Date();
+            const time12Hour = now.toLocaleTimeString("en-US", {
+                hour: "numeric",
+                minute: "numeric",
+                hour12: true,
+            });
+
+            setMostRecentTime(time12Hour);
+
             const progressData = getProgressData();
             saveProgress(progressData);
         }, 500);
 
         return () => clearInterval(autosaveInterval);
-    }, [wpm, cpm, acc, mistakes, incorrectLetter, charIndex, correctKeys, denominater, missedCharacters, wpmPerParagraphs, accPerParagraph, wpmSeconds, totalTimeInTotal, elapsedTime, paragraphElapsedTimers, paragraphIndex, typedValueNumber, typedProgress]);
+    }, [wpm, cpm, acc, mistakes, incorrectLetter, charIndex, correctKeys, denominater, missedCharacters, wpmPerParagraphs, accPerParagraph, wpmSeconds, totalTimeInTotal, elapsedTime, paragraphElapsedTimers, paragraphIndex, typedValueNumber, typedProgress, mostRecentTime]);
 
     const navigate = useNavigate();
 

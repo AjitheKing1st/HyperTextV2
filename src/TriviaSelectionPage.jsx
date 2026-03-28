@@ -1,6 +1,4 @@
-import { useEffect } from "react";
-import { useParams, useNavigate, Outlet } from "react-router-dom";
-import { useState } from "react";
+import { useParams } from "react-router-dom";
 import trivia from './trivia';
 import Header from './Header';
 
