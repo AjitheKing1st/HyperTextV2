@@ -21,7 +21,7 @@ function TypingGameplay() {
     let [denominater, setDenominator] = useState(0);
     let [missedCharacters, addMissedCharater] = useState([]);
     let [wpmPerParagraphs, setWpmPerParagraphs] = useState([]);
-    let [accPerParagraph, setAccPerParagrpah] = useState([]);
+    let [accPerParagraph, setAccPerParagraph] = useState([]);
     let [numOfParagraphs, setNumOfParagraphs] = useState(0);
     let [wpmSeconds, setWpmSeconds] = useState(0);
     let [totalTimeInTotal, setTotalTime] = useState("");
@@ -30,7 +30,6 @@ function TypingGameplay() {
     let [paragraphElapsedTimers, setParagraphElapsedTimers] = useState([]);
     let [typedValueNumber, setTypedValueNumber] = useState(0);
     let [typedProgress, setTypedProgress] = useState("");
-    let [mostRecentTime, setMostRecentTime] = useState("");
     const [progressRestored, setProgressRestored] = useState(false);
 
     const levelKey = `${subject}: ${triviatopic}`;
@@ -53,7 +52,6 @@ function TypingGameplay() {
         paragraphIndex,
         typedValueNumber,
         typedProgress,
-        mostRecentTime
     });
 
     const saveProgress = async (progress) => {
@@ -66,7 +64,9 @@ function TypingGameplay() {
 
     const loadProgress = async () => {
         try {
+
             const savedProgress = await localforage.getItem(levelKey);
+
             if (savedProgress) {
                 setWpm(savedProgress.wpm || 0);
                 setCpm(savedProgress.cpm || 0);
@@ -77,7 +77,7 @@ function TypingGameplay() {
                 setDenominator(savedProgress.denominater || 0);
                 addMissedCharater(savedProgress.missedCharacters || []);
                 setWpmPerParagraphs(savedProgress.wpmPerParagraphs || []);
-                setAccPerParagrpah(savedProgress.accPerParagraph || []);
+                setAccPerParagraph(savedProgress.accPerParagraph || []);
                 setWpmSeconds(savedProgress.wpmSeconds || 0);
                 setTotalTime(savedProgress.totalTimeInTotal || "");
                 setIncorrectLetters(savedProgress.incorrectLetter || 0);
@@ -86,7 +86,8 @@ function TypingGameplay() {
                 setParagraphIndex(savedProgress.paragraphIndex || 0);
                 setParagraphElapsedTimers(savedProgress.paragraphElapsedTimers || []);
                 setTypedValueNumber(savedProgress.typedValueNumber || 0);
-                setMostRecentTime(savedProgress.mostRecentTime || "");
+
+
             }
 
             setProgressRestored(true);
@@ -119,7 +120,7 @@ function TypingGameplay() {
         setDenominator(0);
         addMissedCharater([]);
         setWpmPerParagraphs([]);
-        setAccPerParagrpah([]);
+        setAccPerParagraph([]);
         setWpmSeconds(0);
         setTotalTime("");
         setElapsedTime(0);
@@ -162,27 +163,18 @@ function TypingGameplay() {
     useEffect(() => {
         const autosaveInterval = setInterval(() => {
 
-            const now = new Date();
-            const time12Hour = now.toLocaleTimeString("en-US", {
-                hour: "numeric",
-                minute: "numeric",
-                hour12: true,
-            });
-
-            setMostRecentTime(time12Hour);
-
             const progressData = getProgressData();
             saveProgress(progressData);
-        }, 500);
+        }, 100);
 
         return () => clearInterval(autosaveInterval);
-    }, [wpm, cpm, acc, mistakes, incorrectLetter, charIndex, correctKeys, denominater, missedCharacters, wpmPerParagraphs, accPerParagraph, wpmSeconds, totalTimeInTotal, elapsedTime, paragraphElapsedTimers, paragraphIndex, typedValueNumber, typedProgress, mostRecentTime]);
+    }, [wpm, cpm, acc, mistakes, incorrectLetter, charIndex, correctKeys, denominater, missedCharacters, wpmPerParagraphs, accPerParagraph, wpmSeconds, totalTimeInTotal, elapsedTime, paragraphElapsedTimers, paragraphIndex, typedValueNumber, typedProgress,]);
 
     const navigate = useNavigate();
 
     const wpmTimer = useRef();
 
-    useLayoutEffect(() => {
+    useEffect(() => {
 
         if (!progressRestored) return;
 
@@ -215,7 +207,7 @@ function TypingGameplay() {
         };
 
         let typingTimeout;
-        const typingPauseDuration = 1000;
+        const typingPauseDuration = 500;
         let start;
         let date;
 
@@ -230,11 +222,11 @@ function TypingGameplay() {
             startTimer();
 
             setTimeout(() => {
-                if (new Date().getTime() - timer.lastTypingTime >= 1500) {
+                if (new Date().getTime() - timer.lastTypingTime >= 500) {
                     pauseTimer();
                     pausePlaySymbol.innerHTML = `<i class="fa-solid fa-play"></i>`;
                 }
-            }, 1500);
+            }, 500);
 
             if (wpmTimer.current === undefined) {
                 start = Date.now();
@@ -251,33 +243,51 @@ function TypingGameplay() {
             if (charIndex < characters.length) {
 
                 if (typedChar == null) {
+
                     if (charIndex > 0) {
+
                         setCharIndex(charIndex -= 1);
+
                         if (characters[charIndex].classList.contains("incorrect")) {
+
                             setMistakes(mistakes -= 1);
                             setDenominator(denominater -= 1);
                             setIncorrectLetters(incorrectLetter += 1);
 
                             for (let i = missedCharacters.length - 1; i >= 0; i -= 1) {
+
                                 if (characters[charIndex].innerText != missedCharacters[i]) {
+
                                     characters[charIndex].innerText = missedCharacters[i];
+
                                     missedCharacters.pop();
+
                                     break;
                                 }
                             }
                         }
                         else {
+
                             setCorrectKeys(correctKeys -= 1);
+
                             setDenominator(denominater -= 1);
                         }
+
                         characters[charIndex].classList.remove("correct", "incorrect");
+
                     }
-                } else {
+                }
+                else {
+
+
                     if (characters[charIndex].innerText == typedChar) {
                         characters[charIndex].classList.add("correct");
                         setCorrectKeys(correctKeys += 1);
                         setDenominator(denominater += 1);
-                    } else {
+                    }
+
+
+                    else {
                         setMistakes(mistakes += 1);
                         characters[charIndex].classList.add("incorrect");
                         missedCharacters.push(characters[charIndex].innerText);
@@ -285,17 +295,21 @@ function TypingGameplay() {
                         setDenominator(denominater += 1);
                         setIncorrectLetters(incorrectLetter -= 1);
                     }
+
+
                     setCharIndex(charIndex += 1);
 
                     if (charIndex === characters.length) {
+                        
                         pauseTimer();
+                        
                         clearInterval(timer.current);
+                        
                         timer.current = null;
-                        const finalTime = `${timer.days}d ${timer.hours}h ${timer.minutes}m ${timer.seconds}s`;
 
                         setInterval(() => {
-                            navigate(`/${subject}/${triviatopic}/results`, { state: { accuracy: ((correctKeys / denominater) * 100).toFixed(2), time: finalTime, wpm: (((inpField.value.length + incorrectLetter) / 5) / (seconds / 60)).toFixed(2), cpm: charIndex - mistakes, mistakes: mistakes, wordsPerMinutePerParagraphs: wpmPerParagraphs, accPerParagraph: accPerParagraph } });
-                        }, 100)
+                            navigate(`/${subject}/${triviatopic}/results`);
+                        }, 600)
 
                     }
                 }
@@ -536,10 +550,12 @@ function TypingGameplay() {
     }, [progressRestored]);
 
     useLayoutEffect(() => {
+
         const inpField = document.querySelector(".prompt-box .input-field");
+
         const typingText = document.querySelector(".prompt");
 
-        if (typedProgress) {
+        if (progressRestored) {
 
             inpField.value = typedProgress;
 
@@ -549,12 +565,15 @@ function TypingGameplay() {
 
             typedProgress.split("").forEach((char, index) => {
                 if (characters[index]) {
+
                     if (characters[index].innerText === char) {
                         characters[index].classList.add("correct");
-                    } else {
+                    }
+                    else {
                         characters[index].innerText = char;
                         characters[index].classList.add("incorrect");
                     }
+
                 }
             });
 
@@ -563,7 +582,8 @@ function TypingGameplay() {
                 characters[typedProgress.length].classList.add("active");
             }
         }
-    }, [typedProgress]);
+
+    }, [progressRestored]);
 
     useEffect(() => {
         const keys = document.querySelectorAll('.screen-keyboard-desktop button');
@@ -1433,6 +1453,8 @@ function TypingGameplay() {
 
         let array2 = [];
 
+        let wpmArray = [...wpmPerParagraphs];
+
         const showNumOfParagraphs = () => numberOfParagraphs.forEach((p, index) => {
             if (p.textContent !== "") {
                 array2.push(index);
@@ -1447,7 +1469,7 @@ function TypingGameplay() {
 
         let typingTimeout;
 
-        const typingPauseDuration = 1000;
+        const typingPauseDuration = 500;
 
         let start;
 
@@ -1495,23 +1517,47 @@ function TypingGameplay() {
                 currentSeconds = 1;
             }
 
-            wpm = (((tempNum + incorrectLetters) / 5) / (currentSeconds / 60)).toFixed(2);
+            wpm = (((tempNum + incorrectLetters) / 5) / (currentSeconds / 60));
 
             if (characters[characters.length - 2].classList.contains("correct") || characters[characters.length - 2].classList.contains("incorrect")) {
-                accPerParagraph.push(accuracy.textContent.replace("%", ""));
-                wpmPerParagraphs.push(wpm);
+
+                setAccPerParagraph(prev => [
+                    ...prev,
+                    Number(accuracy.textContent.replace("%", ""))
+                ]);
+
+                wpmArray.push(Number(wpm.toFixed(2)));
+
+                setWpmPerParagraphs([...wpmArray]);
+
                 subtraction = inpField.value.length;
+
                 setTypedValueNumber(subtraction);
+
                 incorrectLetters = 0;
+
                 clearInterval(seperateTimers.current);
+
                 seperateTimers.current = undefined;
+
                 elapsedTimer = 0;
+
                 start = undefined;
+
             }
             else if (inpField.value.length === letters) {
-                accPerParagraph.push(accuracy.textContent.replace("%", ""));
-                wpmPerParagraphs.push(wpm);
+
+                setAccPerParagraph(prev => [
+                    ...prev,
+                    Number(accuracy.textContent.replace("%", ""))
+                ]);
+
+                wpmArray.push(Number(wpm.toFixed(2)));
+
+                setWpmPerParagraphs([...wpmArray]);
+
             }
+
         }
 
         let checkIncorrectLetters = (paragraph) => {
@@ -1633,7 +1679,7 @@ function TypingGameplay() {
                         </div>
 
                         <div class="prompt-box hide-scrollbar">
-                            <input type="text" className="input-field" autoCapitalize="off" autoCorrect="off" spellCheck="false" autoComplete="off" />
+                            <input type="text" className="input-field" id="invisibleTypingBox" autoCapitalize="off" autoCorrect="off" spellCheck="false" autoComplete="off" />
                             <section class="prompt">
                                 <div class="paragraphs-box">
                                     {

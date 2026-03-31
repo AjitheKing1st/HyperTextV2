@@ -1,6 +1,7 @@
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import Header from "./Header";
-import { useLocation, useParams } from "react-router-dom";
+import { useParams } from "react-router-dom";
+import localforage from "localforage";
 import { Line } from "react-chartjs-2";
 import {
     Chart as ChartJS,
@@ -12,7 +13,6 @@ import {
     Title,
     Tooltip,
     Legend,
-
 } from "chart.js";
 
 ChartJS.register(
@@ -28,43 +28,129 @@ ChartJS.register(
 
 function Results() {
 
-    let { triviatopic } = useParams();
+    const [accuracy, setAccuracy] = useState(0);
+    const [time, setTime] = useState("");
+    const [cpm, setCpm] = useState(0);
+    const [wpm, setWpm] = useState(0);
+    const [mistakes, setMistakes] = useState(0);
+    const [wpmPerParagraph, setWpmPerParagraph] = useState([]);
+    const [fastestWpm, setFastestWpm] = useState(0);
+    const [accPerParagraph, setAccPerParagraph] = useState([]);
+    const [loading, setLoading] = useState(true);
+    const [error, setError] = useState(null);
 
-    const { state } = useLocation();
-    let { accuracy, time, cpm, wpm, mistakes, wordsPerMinutePerParagraphs, accPerParagraph } = state;
-
-    let wpmPerParagraphs = [];
-    let wordsPerMin = [];
-    let accuracyPerParagraph = [];
-
-    for (let i = 0; i < wordsPerMinutePerParagraphs.length; i += 1) {
-        wordsPerMin.push(wpm);
-    }
-
-    for (let i = 0; i < wordsPerMinutePerParagraphs.length; i += 1) {
-        wpmPerParagraphs.push(wordsPerMinutePerParagraphs[i]);
-    }
-
-    for (let i = 0; i < accPerParagraph.length; i += 1) {
-        accuracyPerParagraph.push(accPerParagraph[i]);
-    }
+    let { subject, triviatopic } = useParams();
 
     useEffect(() => {
 
-        const h2 = document.getElementById("fastestParagraph");
+        const accuracyArray = [];
+        const timeArray = [];
+        const cpmArray = [];
+        const wpmArray = [];
+        const mistakesArray = [];
+        const wpmPerParagraphArray = [];
+        const accPerParagraphArray = [];
+        let timeData;
 
-        let fastestWpm = Math.max(...wpmPerParagraphs);
+        const titleNameKey = `${subject}: ${triviatopic}`
+        const totalTimeKey = `${subject}: ${triviatopic} Total Time`
 
-        h2.insertAdjacentHTML('afterbegin', `<h2>${fastestWpm} WPM</h2>`);
+        const fetchResults = async () => {
+
+            try {
+
+                await localforage.iterate((value, key, iterationNumber) => {
+
+                    if (key == titleNameKey) {
+
+                        accuracyArray.push(value.accuracy);
+                        cpmArray.push(value.cpm);
+                        wpmArray.push(value.wpm);
+                        mistakesArray.push(value.mistakes);
+                        wpmPerParagraphArray.push(...value.wpmPerParagraphs);
+                        accPerParagraphArray.push(...value.accPerParagraph);
+
+                    }
+
+                    if (key == totalTimeKey) {
+
+                        if (value.seconds > 0 && value.minutes == 0) {
+
+                            timeData = `${value.seconds} Second(s)`;
+
+                            timeArray.push(timeData)
+
+                        }
+                        else if (value.minutes > 0 && (value.hours == 0 && value.days == 0)) {
+
+                            timeData = `${value.minutes} Minute(s) and ${value.seconds} Second(s)`;
+
+                            timeArray.push(timeData)
+
+                        }
+                        else if (value.hours > 0 && value.days == 0) {
+
+                            timeData = `${value.hours} Hour(s) and ${value.minutes} Minute(s) and ${value.seconds} Second(s)`;
+
+                            timeArray.push(timeData)
+
+                        }
+                        else if (value.days > 0 && (value.hours == 0 || value.hours > 0)) {
+
+                            timeData = `${value.days} Day(s) and ${value.hours} Hour(s) and ${value.minutes} Minute(s) and ${value.seconds} Second(s)`;
+
+                            timeArray.push(timeData)
+
+                        }
+
+                    }
+
+                });
+
+                let fastestWpm = Math.max(...wpmPerParagraphArray.flat());
+
+                setAccuracy(accuracyArray);
+                setTime(timeData);
+                setWpm(wpmArray);
+                setFastestWpm(fastestWpm);
+                setCpm(cpmArray);
+                setMistakes(mistakesArray);
+                setWpmPerParagraph(wpmPerParagraphArray);
+                setAccPerParagraph(accPerParagraphArray);
+
+            }
+            catch (err) {
+
+                setError(err);
+
+                console.error('Error retrieving data:', err);
+
+            } finally {
+
+                setLoading(false);
+
+            }
+
+        };
+
+        fetchResults();
 
     }, []);
 
-    const numOfParagraphs = wordsPerMinutePerParagraphs.length;
+    const constWpmArray = []
+
+    for (let i = 0; i < wpmPerParagraph.length; i += 1) {
+
+        constWpmArray.push(wpm);
+
+    }
 
     const labels = [];
 
-    for (let i = 0; i < numOfParagraphs; i += 1) {
+    for (let i = 0; i < wpmPerParagraph.length; i += 1) {
+
         labels.push((i + 1).toString());
+
     }
 
     const data = {
@@ -72,7 +158,7 @@ function Results() {
         datasets: [
             {
                 label: "Average WPM (Words Per Minute)",
-                data: wordsPerMin,
+                data: constWpmArray.flat(),
                 borderColor: "yellow",
                 cubicInterpolationMode: 'monotone',
                 BackgroundColor: "white",
@@ -82,19 +168,19 @@ function Results() {
                 pointRadius: 5,
             },
             {
-                label: "WPM (Words Per Minute)",
-                data: wpmPerParagraphs,
-                borderColor: "rgba(148,154,50,1)",
+                label: "WPM (Words Per Minute) Per Paragraph",
+                data: wpmPerParagraph,
+                borderColor: "rgb(0, 247, 255)",
                 fill: true,
                 cubicInterpolationMode: 'monotone',
-                BackgroundColor: "rgba(148,154,50,1)",
-                pointBackgroundColor: "rgba(148,154,50,1)",
+                BackgroundColor: "rgb(0, 247, 255)",
+                pointBackgroundColor: "rgb(0, 247, 255)",
                 tension: 0.4,
                 pointRadius: 5,
             },
             {
-                label: "Accuracy",
-                data: accuracyPerParagraph,
+                label: "Accuracy Per Paragraph",
+                data: accPerParagraph,
                 yAxisID: 'AccuracyPerParagraph',
                 borderColor: "pink",
                 fill: true,
@@ -152,6 +238,9 @@ function Results() {
                         weight: "600",
                         family: "Segoe UI Symbol"
                     },
+                    callback: (val) => {
+                        return val + " WPM";
+                    }
                 },
             },
             AccuracyPerParagraph: {
@@ -211,9 +300,25 @@ function Results() {
                         return `At Paragraph ${index[0].dataIndex + 1}`;
                     },
                     label: function (tooltipItem) {
-                        if (tooltipItem.dataset.label === "Accuracy") {
+
+                        if (tooltipItem.dataset.label === "Accuracy Per Paragraph") {
+
                             return `${tooltipItem.dataset.label}: ${tooltipItem.raw}%`;
+
                         }
+
+                        if (tooltipItem.dataset.label === "Average WPM (Words Per Minute)") {
+                            
+                            return `${tooltipItem.dataset.label}: ${tooltipItem.raw} WPM`;
+                        
+                        }
+
+                        if (tooltipItem.dataset.label === "WPM (Words Per Minute) Per Paragraph") {
+
+                            return `${tooltipItem.dataset.label}: ${tooltipItem.raw} WPM`;
+
+                        }
+
                         return `${tooltipItem.dataset.label}: ${tooltipItem.raw}`;
                     }
                 },
@@ -221,8 +326,13 @@ function Results() {
         }
     };
 
+    if (loading) return <p>Loading Results...</p>;
+
+    if (error) return <p>Error, couldn't load your results.</p>;
+
     return (
         <>
+
             <Header />
             <div className="results-container">
 
@@ -243,7 +353,7 @@ function Results() {
                     </div>
                     <div className="wpmPerParagraphs">
                         <h3>Fastest Paragraph: </h3>
-                        <p id="fastestParagraph"></p>
+                        <h2>{fastestWpm} WPM</h2>
                     </div>
                     <div className="cpm">
                         <h3>Characters Typed:</h3>
@@ -260,6 +370,7 @@ function Results() {
             <div className="Chapter-Statistics-Chart">
                 <Line data={data} options={options} />
             </div>
+
         </>
     )
 }

@@ -25,5 +25,3 @@ toggle.addEventListener("click", (event) => {
 toggle.checked = userPrefersDark;
 
 ///===================Dark/Light Mode Preference =======================///
-
-

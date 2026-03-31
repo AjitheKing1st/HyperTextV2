@@ -10,7 +10,7 @@ function App() {
   return (
     <>
       <Routes>
-        <Route index path="/" element={<Home />} />
+        <Route path="/" element={<Home />} />
         <Route path=":subject" element={<TriviaSelectionPage />}></Route>
         <Route path=":subject/:triviatopic" element={<TypingGameplay />}></Route>
         <Route path="/stats" element={<TypingStatistics />}></Route>

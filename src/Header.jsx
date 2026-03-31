@@ -28,16 +28,6 @@ function Header() {
 
         toggle.checked = userPrefersDark;
 
-        /*
-        const start = document.getElementsByClassName("start");
-
-        console.log(start);
-
-        const paragraphsBox = document.querySelector(".paragraphs-box");
-
-        console.log(paragraphsBox);
-        */
-
     }, [])
 
     return (
